@@ -8,7 +8,7 @@ body {
     background-color: #000000;
     color: white;
     font-family: Arial, Helvetica, sans-serif;
-    overflow: hidden;
+    /* overflow: hidden; */
     display: flex;
     flex-direction: column;
     height: 100vh;
@@ -20,18 +20,29 @@ body {
     justify-content: space-between;
     padding: 15px 40px;
     font-size: 16px;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+
+    background-color: #000000;
+
 }
 
 .logo {
     font-size: 30px;
     font-weight: 700;
+    padding-right: 25px;
 }
 
 .nav-center {
     display: flex;
     align-items: center;
     gap: 15px;
-    transform: translateX(70px);
+    /* transform: translateX(70px); */
+
 }
 
 .nav-center input {
@@ -52,6 +63,7 @@ body {
     display: flex;
     align-items: center;
     gap: 15px;
+    padding-left: 25px;
 }
 
 button {
@@ -165,6 +177,9 @@ header {
     gap: 15px;
     padding: 0 15px 15px 15px;
     min-height: 0;
+
+    overflow: hidden;
+    margin-top: 90px;
 }
 
 #main {
@@ -175,9 +190,10 @@ header {
     padding: 20px;
 
     min-height: 0;
+    scroll-behavior: smooth;
 }
 
-#trendingSongs {
+#trendingSongsLabel {
     padding-bottom: 20px;
 }
 
@@ -198,22 +214,78 @@ header {
     height: 200px;
     background-color: #282828;
     border-radius: 10px;
+
+    flex-shrink: 0;
 }
 
-#popularArtists {
+#popularArtistsLabel {
     padding-top: 100px;
     padding-bottom: 20px;
 }
 
 .artistCard {
     min-width: 185px;
+
     height: 190px;
     background-color: #282828;
     border-radius: 200px;   
 }
 
-#popularAlbums {
+#popularAlbumsLabel {
     padding-top: 50px;
     padding-bottom: 20px;
 }
 
+
+@media (max-width: 786px) {
+
+    .content {
+        flex-direction: column;
+        padding: 0 10px 10px 10px;
+        margin-top: 100px;
+    }
+
+    #leftPanel {
+        display: none;
+    }
+
+    #main {
+        width: 100%;
+        border-radius: 0;
+    }
+
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 15px;
+    }
+
+    .nav-right {
+        display: none;
+    }
+
+    .nav-center {
+        width: 100%;
+    }
+
+    .nav-center input {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .nav-center button {
+        display: none;
+    }
+
+    .songCard {
+        min-width: 140px;
+        height: 170px;
+    }
+
+    .artistCard {
+        min-width: 150px;
+        height: 150px;
+    }
+
+}
