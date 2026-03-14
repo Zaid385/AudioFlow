@@ -31,10 +31,22 @@ body {
 
 }
 
-.logo {
+.logoText {
     font-size: 30px;
     font-weight: 700;
     padding-right: 25px;
+}
+
+#logoImage {
+    display: block;
+    height: 32px;
+    width: 32px;  
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
 .nav-center {
@@ -43,6 +55,75 @@ body {
     gap: 15px;
     /* transform: translateX(70px); */
 
+}
+
+.homeButton {
+    width: 50px;
+    height: 50px;
+
+    background-color: #2A2A2A;
+
+    border-radius: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: background 0.2s ease;
+}
+
+.homeButton img {
+    width: 40px;
+    height: 40px;
+}
+
+.homeButton:hover {
+    background-color: #444343;
+    transform: scale(1.05);
+}
+
+.searchBar {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    background-color: #242424;
+    padding: 10px 16px;
+
+    border-radius: 500px;
+
+    width: 500px;
+    height: 48px;
+
+    border: 2px solid transparent;
+
+    transition: background 0.2s ease, border 0.2s ease;
+}
+
+.searchBar input {
+    background: none;
+    border: none;
+    outline: none;
+
+    color: white;
+    font-size: 14px;
+
+    width: 100%;
+}
+
+.searchBar img {
+    width: 40px;
+    height: 40px;
+    opacity: 0.8;
+}
+
+.searchBar:hover {
+    background-color: #2a2a2a;
+}
+
+.searchBar:focus-within {
+    border: 1px solid #ffffff;
 }
 
 .nav-center input {
@@ -64,6 +145,10 @@ body {
     align-items: center;
     gap: 15px;
     padding-left: 25px;
+}
+
+.bottomNav {
+    display: none;
 }
 
 button {
@@ -236,13 +321,137 @@ header {
     padding-bottom: 20px;
 }
 
+.hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+
+    width: 20px;
+    height: 18px;
+
+    padding-right: 10px;
+
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.hamburger span {
+    height: 2px;
+    width: 20px;
+    background: white;
+
+    transition: all 0.3s ease;
+}
+
+.hamburger.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px,5px);
+}
+
+.hamburger.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(5px,-5px);
+}
+
+
+.mobileMenu {
+    position: fixed;
+    top: 0;
+    right: -100%;
+
+    width: 100%;
+    height: 100vh;
+
+    background: #121212;
+
+    transition: right 0.35s ease;
+
+    z-index: 3000;
+}
+
+.mobileMenu.open {
+    right: 0;
+}
+
+.mobileMenuContent {
+    padding: 100px 30px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+
+    font-size: 18px;
+}
+
+.authButtons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.authButtons button {
+    font-size: 25px;
+    font-weight: 600;
+
+    padding-bottom: 20px;
+    background: none;
+    border: none;
+    color: d3d1d1;
+
+    text-align: left;
+}
+
+.mobileMenu hr {
+    border: none;
+    border-top: 2px solid #d3d1d1;
+    width: 20px;
+}
+
+.menuLinks {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.menuLinks button {
+    background: none;
+    border: none;
+
+    color: #b3b3b3;
+
+    font-size: 16px;
+
+    text-align: left;
+}
+
+.closeMenu {
+    position: absolute;
+    top: 15px;
+    right: 13px;
+
+    font-size: 30px;
+    color: white;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 3100;
+}
+
+/* ------------------------- Media Queries ---------------------- */
 
 @media (max-width: 786px) {
+
+    * {
+        -webkit-tap-highlight-color: transparent;
+    }
 
     .content {
         flex-direction: column;
         padding: 0 10px 10px 10px;
-        margin-top: 100px;
+        margin-top: 60px;
     }
 
     #leftPanel {
@@ -252,31 +461,57 @@ header {
     #main {
         width: 100%;
         border-radius: 0;
+        padding-bottom: 90px;
     }
 
     .navbar {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-        padding: 15px;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 10px 15px;
+        height: 64px;
     }
+
+    .hamburger {
+        display: flex;
+    }
+    
 
     .nav-right {
+        /* position: fixed;
+        top: 0px;
+        right: -260px;
+
+        width: 260px;
+        height: 100vh;
+
+        background: #000000;
+
+        flex-direction: column;
+        align-items: flex-start;
+
+        padding: 80px 20px;
+
+        gap: 20px;
+
+        transition: right 0.3s ease;
+        z-index: 1500; */
+
         display: none;
     }
+
+/* 
+    .nav-right.open {
+        right: 0;
+    } */
 
     .nav-center {
-        width: 100%;
-    }
-
-    .nav-center input {
-        width: 100%;
-        min-width: 0;
-    }
-
-    .nav-center button {
         display: none;
     }
+
+    .nav-left {
+        gap: 3px;
+    }
+
 
     .songCard {
         min-width: 140px;
@@ -288,4 +523,82 @@ header {
         height: 150px;
     }
 
+    .logoText {
+        font-size: 20px;
+        padding-left: 0px;
+    }
+
+    #logoImage {
+        display: block;
+        height: 32px;
+        width: 32px;  
+    }
+
+    .searchBar {
+        display: none;
+    }
+
+    .bottomNav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+
+        width: 100%;
+        height: 70px;
+
+        background: rgba(0, 0, 0, 0.35);
+        backdrop-filter: blur(5px);
+
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+
+        z-index: 2000;
+    }
+
+    .bottomNav button:hover {
+        color: #ffffff;
+    }
+
+    .navItem{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        background: none;
+        border: none;
+        outline: none;
+
+        font-size: 12px;
+        gap: 2px;
+
+        color: #ffffff;
+        transition: transform 0.08s ease;
+
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .navItem:hover {
+        color: #ffffff;
+    }
+    
+    .navItem:active {
+        transform: scale(0.90);
+        filter: brightness(0.5);
+    }
+
+    .icon img{
+        width: 33px;
+        height: 33px;
+        display: block;
+        transition: transform 0.08s ease, filter 0.08s ease;
+    }
+
+    .label {
+        font-size: 11px;
+        line-height: 1;
+    }
+
+    
 }
