@@ -1,0 +1,19 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="AudioFLow_icon_white">
+<g id="Group 1">
+<g id="Mask group">
+<mask id="mask0_3_48" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="32" y="32" width="448" height="448">
+<path id="Ellipse 3" d="M480 256C480 379.712 379.712 480 256 480C132.288 480 32 379.712 32 256C32 132.288 132.288 32 256 32C379.712 32 480 132.288 480 256ZM173.395 256C173.395 301.622 210.378 338.605 256 338.605C301.622 338.605 338.605 301.622 338.605 256C338.605 210.378 301.622 173.395 256 173.395C210.378 173.395 173.395 210.378 173.395 256Z" fill="#70E03B"/>
+</mask>
+<g mask="url(#mask0_3_48)">
+<rect id="Rectangle 1" x="32" y="32" width="62.125" height="430.5" fill="white"/>
+<rect id="Rectangle 5" x="417.875" y="35.5" width="62.125" height="430.5" fill="white"/>
+<rect id="Rectangle 2" x="136.125" y="55.625" width="55.125" height="399.875" rx="27.5625" fill="white"/>
+<rect id="Rectangle 4" x="320.75" y="60.875" width="55.125" height="395.5" rx="27.5625" fill="white"/>
+<rect id="Rectangle 3" x="233.25" y="32" width="45.5" height="448" rx="22.75" fill="white"/>
+</g>
+</g>
+<path id="Polygon 1" d="M304.067 243.144C314.802 248.755 314.802 264.12 304.067 269.731L240.542 302.935C230.555 308.155 218.594 300.91 218.594 289.641V223.234C218.594 211.965 230.555 204.72 240.542 209.94L304.067 243.144Z" fill="white"/>
+</g>
+</g>
+</svg>

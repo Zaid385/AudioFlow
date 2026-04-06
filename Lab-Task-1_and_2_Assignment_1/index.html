@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AudioFlow - Find a flow and go with it</title>
+    <link rel="icon" type="image/icon" href="images/AudioFLow_icon_green.svg">
+    <link rel="stylesheet" href="style.css">
+    
+</head>
+<body>
+    
+    <header class="navbar">
+        
+        <div class="nav-left">
+            <img src="images/AudioFLow_icon_white.svg" id="logoImage" height="48" width="48" alt="AudioFlow Logo">
+            <div class="logoText">AudioFlow</div>
+        </div>
+
+        
+        <button class="hamburger" id="hamburgerBtn">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+                    
+        <div class="nav-center">
+
+            <button class="homeButton">
+                <img src="images/Home.svg" alt="home">
+            </button>
+            
+            <div class="searchBar">
+                <img src="images/Search.svg" alt="search">
+                <input type="text" placeholder="What do you want to play?">
+            </div>
+
+        </div>
+        
+        <div class="nav-right">
+            <button>Premium</button>
+            <button>Support</button>
+            <button>Download</button>
+            
+            <span class="divider"></span>
+
+            <button>Sign up</button>
+            <button class="loginButton">Login</button>
+        </div>
+
+    </header>
+
+    <div class="mobileMenu" id="mobileMenu">
+
+        <button class="closeMenu" id="closeMenuBtn">✕</button>
+        
+        <div class="mobileMenuContent">
+
+            <div class="authButtons">
+                <button class="loginBtn">Login</button>
+                <button class="signupBtn">Sign Up</button>
+            </div>
+
+            <hr>
+
+            <div class="menuLinks">
+                <button>Premium</button>
+                <button>Support</button>
+                <button>Download</button>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="content">
+
+        <div id="leftPanel">
+
+            <header>
+                <h3>Your Library</h3>
+                <button id="create">Create</button>
+            </header>
+
+            <div id="playlistArea">
+                
+            </div>
+
+            <footer>
+
+                <div class="footerLinks">
+                <a href="">Legal</a>
+                <a href="">Safety & Privacy center</a>
+                <a href="">Privacy Policy</a>
+                <a href="">Cookies</a>
+                <a href="">Accessibility</a>
+                </div>
+                
+                <button id="languageSelection">Language</button>
+            
+            </footer>
+        </div>
+    
+
+        <div id="main">
+
+            <h2 id="trendingSongsLabel">Trending Songs</h2>
+            <!-- <br> -->
+
+            <div class="row">
+
+                <div class="songCard"></div>
+                <div class="songCard"></div>
+                <div class="songCard"></div>
+                <div class="songCard"></div>
+                <div class="songCard"></div>
+                <div class="songCard"></div>
+                <div class="songCard"></div>
+                <div class="songCard"></div>
+                <div class="songCard"></div>
+                <div class="songCard"></div>
+
+            </div>
+
+    
+
+            <h2 id="popularArtistsLabel">Popular Artists</h2>
+            
+            <div class="row">
+
+                <div class="artistCard"></div>
+                <div class="artistCard"></div>
+                <div class="artistCard"></div>
+                <div class="artistCard"></div>
+                <div class="artistCard"></div>
+                <div class="artistCard"></div>
+                <div class="artistCard"></div>
+                <div class="artistCard"></div>
+                <div class="artistCard"></div>
+                <div class="artistCard"></div>
+
+            </div>
+
+            <h2 id="popularAlbumsLabel">Popular Albums and Singles</h2>
+
+            <div class="row">
+
+                <div class="songCard"></div>
+                <div class="songCard"></div>
+                <div class="songCard"></div>
+                <div class="songCard"></div>
+                <div class="songCard"></div>
+                <div class="songCard"></div>
+                <div class="songCard"></div>
+                <div class="songCard"></div>
+                <div class="songCard"></div>
+                <div class="songCard"></div>
+
+            </div>
+
+            
+        
+        </div>
+
+    </div>
+
+
+    <nav class="bottomNav">
+
+        <button class="navItem">
+        <span class="icon">
+            <img src="/images/Home.svg" alt="home" >
+        </span>
+        <span class="label">Home</span>
+        </button>
+
+        <button class="navItem">
+            <span class="icon">
+                <img src="/images/Search.svg" alt="search">
+            </span>
+            <span class="label">Search</span>
+        </button>
+
+        <button class="navItem">
+            <span class="icon">
+                <img src="/images/Your_Library.svg" alt="Your Library">
+            </span>
+            <span class="label">Your Library</span>
+        </button>
+
+    </nav>
+
+
+
+
+    <!-- ------------------------- Script ---------------------------- -->
+
+    <script src="script.js"></script>
+
+</body>
+</html>
