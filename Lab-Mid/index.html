@@ -6,6 +6,8 @@
     <title>AudioFlow - Find a flow and go with it</title>
     <link rel="icon" type="image/icon" href="images/AudioFLow_icon_green.svg">
     <link rel="stylesheet" href="style.css">
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     
 </head>
 <body>
@@ -104,11 +106,14 @@
 
         <div id="main">
 
-            <h2 id="trendingSongsLabel">Trending Songs</h2>
-            <!-- <br> -->
+            <h2 id="trendingSongsLabel">Trending</h2>
+            
+            <div id="loadingSpinner" class="spinner">Loading...</div>
+            <div class="row" id="trendingRow"></div>
 
             <div class="row">
 
+                <!-- <div class="songCard"></div>
                 <div class="songCard"></div>
                 <div class="songCard"></div>
                 <div class="songCard"></div>
@@ -117,8 +122,7 @@
                 <div class="songCard"></div>
                 <div class="songCard"></div>
                 <div class="songCard"></div>
-                <div class="songCard"></div>
-                <div class="songCard"></div>
+                <div class="songCard"></div> -->
 
             </div>
 
@@ -169,26 +173,53 @@
 
         <button class="navItem">
         <span class="icon">
-            <img src="/images/Home.svg" alt="home" >
+            <img src="images/Home.svg" alt="home" >
         </span>
         <span class="label">Home</span>
         </button>
 
         <button class="navItem">
             <span class="icon">
-                <img src="/images/Search.svg" alt="search">
+                <img src="images/Search.svg" alt="search">
             </span>
             <span class="label">Search</span>
         </button>
 
         <button class="navItem">
             <span class="icon">
-                <img src="/images/Your_Library.svg" alt="Your Library">
+                <img src="images/Your_Library.svg" alt="Your Library">
             </span>
             <span class="label">Your Library</span>
         </button>
 
     </nav>
+
+
+
+    <div id="modalOverlay" class="modal-overlay hidden">
+
+        <div class="modal-box">
+            <button id="modalClose" class="modal-close">&#x2715;</button>
+
+            <div class="modal-inner">
+
+                <img id="modalImage" src="" alt="Product Image" class="modal-img">
+                <div class="modal-details">
+
+                    <span id="modalCategory" class="modal-category"></span>
+                    <h2 id="modalTitle" class="modal-title"></h2>
+                    <p id="modalDesc" class="modal-desc"></p>
+                    
+                    <div class="modal-meta">
+                     
+                        <span id="modalRating" class="modal-rating"></span>
+                        <span id="modalPrice" class="modal-price"></span>
+                    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 
