@@ -1,0 +1,112 @@
+<%- include('partials/header') %>
+
+<div style="padding: 40px; background: linear-gradient(180deg, rgba(29, 185, 84, 0.3) 0%, rgba(18, 18, 18, 1) 100%);">
+    <div style="display: flex; align-items: flex-end; gap: 24px; margin-bottom: 32px;">
+        <div style="width: 232px; height: 232px; background: #282828; box-shadow: 0 8px 24px rgba(0,0,0,0.5); border-radius: 4px; overflow: hidden;">
+            <% if (playlist.songs.length >= 4) { %>
+                <div class="playlist-cover grid-4">
+                    <img src="<%= playlist.songs[0].coverUrl || playlist.songs[0].albumArt %>">
+                    <img src="<%= playlist.songs[1].coverUrl || playlist.songs[1].albumArt %>">
+                    <img src="<%= playlist.songs[2].coverUrl || playlist.songs[2].albumArt %>">
+                    <img src="<%= playlist.songs[3].coverUrl || playlist.songs[3].albumArt %>">
+                </div>
+            <% } else if (playlist.songs.length === 3) { %>
+                <div class="playlist-cover grid-3">
+                    <img src="<%= playlist.songs[0].coverUrl || playlist.songs[0].albumArt %>">
+                    <img src="<%= playlist.songs[1].coverUrl || playlist.songs[1].albumArt %>">
+                    <img src="<%= playlist.songs[2].coverUrl || playlist.songs[2].albumArt %>">
+                </div>
+            <% } else if (playlist.songs.length === 2) { %>
+                <div class="playlist-cover grid-2">
+                    <img src="<%= playlist.songs[0].coverUrl || playlist.songs[0].albumArt %>">
+                    <img src="<%= playlist.songs[1].coverUrl || playlist.songs[1].albumArt %>">
+                </div>
+            <% } else if (playlist.songs.length === 1) { %>
+                <div class="playlist-cover single">
+                    <img src="<%= playlist.songs[0].coverUrl || playlist.songs[0].albumArt %>">
+                </div>
+            <% } else { %>
+                <div class="playlist-cover placeholder">
+                    <img src="/images/Your_Library.svg" style="width: 48px; height: 48px; opacity: 0.3;">
+                </div>
+            <% } %>
+        </div>
+        <div>
+            <p style="text-transform: uppercase; font-size: 12px; font-weight: bold; margin-bottom: 8px;">Playlist</p>
+            <h1 style="font-size: 80px; font-weight: 900; margin: 0; line-height: 1;"><%= playlist.name %></h1>
+            <p style="margin-top: 16px; font-size: 14px; font-weight: bold;">
+                <%= user.name %> • <%= playlist.songs.length %> songs
+            </p>
+        </div>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 32px; margin-bottom: 32px;">
+        <button id="playlistPlayAll" style="width: 56px; height: 56px; background: var(--spotify-green); border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.1s;">
+            <svg width="24" height="24" fill="black" viewBox="0 0 24 24"><path d="M7.05 3.606l13.49 7.788a.7.7 0 0 1 0 1.212L7.05 20.394A.7.7 0 0 1 6 19.788V4.212a.7.7 0 0 1 1.05-.606z"></path></svg>
+        </button>
+        <% if (playlist.name !== 'Liked Songs') { %>
+            <form action="/playlists/delete/<%= playlist._id %>" method="POST" onsubmit="return confirm('Are you sure you want to delete this playlist?')">
+                <button type="submit" style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 24px;">
+                    <svg width="32" height="32" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"></path><path d="M12 8.75H4v-1.5h8v1.5z"></path></svg>
+                </button>
+            </form>
+        <% } %>
+    </div>
+
+    <table style="width: 100%; border-collapse: collapse; text-align: left;">
+        <thead style="border-bottom: 1px solid rgba(255,255,255,0.1); color: var(--text-muted);">
+            <tr>
+                <th style="padding: 12px; width: 50px;">#</th>
+                <th style="padding: 12px;">Title</th>
+                <th style="padding: 12px;">Artist</th>
+                <th style="padding: 12px; width: 100px;">Duration</th>
+                <th style="padding: 12px; width: 100px;"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <% playlist.songs.forEach((song, index) => { %>
+                <tr class="playlist-row" style="cursor: pointer; border-radius: 4px;">
+                    <td style="padding: 12px; color: var(--text-muted);"><%= index + 1 %></td>
+                    <td style="padding: 12px; display: flex; align-items: center; gap: 12px;">
+                        <img src="<%= song.coverUrl || song.albumArt %>" width="40" height="40" style="border-radius: 4px;">
+                        <div>
+                            <div style="font-weight: bold;"><%= song.title %></div>
+                        </div>
+                    </td>
+                    <td style="padding: 12px; color: var(--text-muted);"><%= song.artist %></td>
+                    <td style="padding: 12px; color: var(--text-muted);"><%= song.duration %></td>
+                    <td style="padding: 12px;">
+                        <div style="display: flex; align-items: center; gap: 16px;">
+                            <button class="play-btn" data-song='{"id":"<%= song._id %>","title":"<%= song.title %>","artist":"<%= song.artist %>","albumArt":"<%= song.coverUrl || song.albumArt %>","audioUrl":"<%= song.audioUrl %>"}' style="background: none; border: none; color: white; cursor: pointer; display: none;">
+                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M3 1.713a.7.7 0 0 1 1.05-.607l10.89 6.288a.7.7 0 0 1 0 1.212L4.05 14.894A.7.7 0 0 1 3 14.288V1.713z"></path></svg>
+                            </button>
+                            <form action="/playlists/<%= playlist._id %>/remove/<%= song._id %>" method="POST">
+                                <button type="submit" style="background: none; border: none; color: var(--text-muted); cursor: pointer;">Remove</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            <% }) %>
+            <% if (playlist.songs.length === 0) { %>
+                <tr>
+                    <td colspan="5" style="padding: 40px; text-align: center; color: var(--text-muted);">
+                        <p style="font-size: 18px; color: white; margin-bottom: 8px;">Playlist is empty</p>
+                        <p>Go to search or home to add some music!</p>
+                        <a href="/songs" class="btn-login" style="display: inline-block; margin-top: 24px; text-decoration: none;">Find Songs</a>
+                    </td>
+                </tr>
+            <% } %>
+        </tbody>
+    </table>
+</div>
+
+<style>
+    .playlist-row:hover {
+        background: rgba(255,255,255,0.1);
+    }
+    .playlist-row:hover .play-btn {
+        display: block !important;
+    }
+</style>
+
+<%- include('partials/footer') %>

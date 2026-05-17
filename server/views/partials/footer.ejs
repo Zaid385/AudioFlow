@@ -1,0 +1,75 @@
+            </div>
+        </main>
+
+        <!-- Right Panel (Now Playing) -->
+        <% if (user) { %>
+            <aside class="right-panel" id="rightPanel">
+                <div id="nowPlayingDetails">
+                    <!-- Dynamically populated by player.ts -->
+                    <p style="color: var(--text-muted); text-align: center; margin-top: 100px;">Play a song to see details</p>
+                </div>
+            </aside>
+        <% } %>
+
+        <!-- Bottom Player -->
+        <footer class="player-container">
+            <%- include('player') %>
+        </footer>
+    </div>
+
+    <!-- Modal Overlay: Add to Playlist -->
+    <div class="modal-overlay" id="playlistModal">
+        <div class="modal-content">
+            <h3 style="margin-top: 0;">Add to playlist</h3>
+            <div id="playlistOptions" style="max-height: 300px; overflow-y: auto;">
+                <!-- Dynamically loaded -->
+            </div>
+            <button onclick="document.getElementById('playlistModal').style.display='none'" 
+                    style="margin-top: 24px; color: var(--text-muted); font-size: 14px; font-weight: bold; background: none; border: none; cursor: pointer;">Close</button>
+        </div>
+    </div>
+
+    <!-- Modal Overlay: Create Playlist -->
+    <div class="modal-overlay" id="createPlaylistModal">
+        <div class="modal-content">
+            <h3 style="margin-top: 0;">Create new playlist</h3>
+            <input type="text" id="newPlaylistName" placeholder="My Awesome Playlist" 
+                   style="width: 100%; padding: 12px; border-radius: 4px; border: 1px solid #333; background: #121212; color: white; margin-bottom: 24px;">
+            <div style="display: flex; gap: 12px;">
+                <button id="confirmCreatePlaylist" class="btn-login" style="flex: 1; font-size: 14px; padding: 12px; border: none; cursor: pointer;">Create</button>
+                <button onclick="document.getElementById('createPlaylistModal').style.display='none'" 
+                        style="flex: 1; background: none; border: 1px solid #333; color: white; border-radius: 500px; cursor: pointer;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Overlay: Login Prompt (For guests) -->
+    <div class="modal-overlay" id="loginPromptModal">
+        <div class="modal-content" style="text-align: center; max-width: 450px; padding: 48px;">
+            <img id="loginPromptArt" src="" class="auth-modal-art">
+            <h2 class="auth-modal-title">Start listening with a free AudioFlow account</h2>
+            <p class="auth-modal-text">Sign up to play songs, create playlists, and see what's trending.</p>
+            
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+                <a href="/register" class="btn-login" style="background-color: var(--spotify-green); width: 100%;">Sign up free</a>
+                <a href="/login" class="btn-login" style="background-color: transparent; color: white; border: 1px solid #727272; width: 100%;">Log in</a>
+            </div>
+            
+            <button onclick="document.getElementById('loginPromptModal').style.display='none'" 
+                    style="margin-top: 24px; background: none; border: none; color: var(--text-muted); font-weight: bold; cursor: pointer;">Close</button>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="globalToast">Added to playlist</div>
+
+    <script>
+        <% if (token) { %>
+            localStorage.setItem('audioflow_token', '<%= token %>');
+        <% } else { %>
+            localStorage.removeItem('audioflow_token');
+        <% } %>
+    </script>
+    <script src="/js/main.js"></script>
+</body>
+</html>

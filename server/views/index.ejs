@@ -1,201 +1,53 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AudioFlow - Find a flow and go with it</title>
-    <link rel="icon" type="image/icon" href="/images/AudioFLow_icon_green.svg">
-    <link rel="stylesheet" href="/style.css">
-    
-</head>
-<body>
-    
-    <header class="navbar">
-        
-        <div class="nav-left">
-            <img src="/images/AudioFLow_icon_white.svg" id="logoImage" height="48" width="48" alt="AudioFlow Logo">
-            <div class="logoText">AudioFlow</div>
-        </div>
+<%- include('partials/header') %>
 
-        
-        <button class="hamburger" id="hamburgerBtn">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
-                    
-        <div class="nav-center">
-
-            <button class="homeButton">
-                <img src="/images/Home.svg" alt="home">
-            </button>
-            
-            <div class="searchBar">
-                <img src="/images/Search.svg" alt="search">
-                <input type="text" placeholder="What do you want to play?">
-            </div>
-
-        </div>
-        
-        <div class="nav-right">
-            <button>Premium</button>
-            <button>Support</button>
-            <button>Download</button>
-            
-            <span class="divider"></span>
-
-            <button>Sign up</button>
-            <button class="loginButton">Login</button>
-        </div>
-
-    </header>
-
-    <div class="mobileMenu" id="mobileMenu">
-
-        <button class="closeMenu" id="closeMenuBtn">✕</button>
-        
-        <div class="mobileMenuContent">
-
-            <div class="authButtons">
-                <button class="loginBtn">Login</button>
-                <button class="signupBtn">Sign Up</button>
-            </div>
-
-            <hr>
-
-            <div class="menuLinks">
-                <button>Premium</button>
-                <button>Support</button>
-                <button>Download</button>
-            </div>
-
-        </div>
-
+<section>
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px;">
+        <h2 style="font-size: 24px; font-weight: bold;">Trending Songs</h2>
+        <a href="/songs" style="color: var(--text-muted); font-size: 14px; font-weight: bold; text-decoration: none;">Show all</a>
     </div>
-
-    <div class="content">
-
-        <div id="leftPanel">
-
-            <header>
-                <h3>Your Library</h3>
-                <button id="create">Create</button>
-            </header>
-
-            <div id="playlistArea">
-                
-            </div>
-
-            <footer>
-
-                <div class="footerLinks">
-                <a href="">Legal</a>
-                <a href="">Safety & Privacy center</a>
-                <a href="">Privacy Policy</a>
-                <a href="">Cookies</a>
-                <a href="">Accessibility</a>
+    
+    <div class="song-grid">
+        <% trendingSongs.forEach(song => { %>
+            <div class="song-card">
+                <div class="img-container">
+                    <img src="<%= song.coverUrl || song.albumArt %>" onerror="this.src='/images/Your_Library.svg'">
+                    <div class="card-actions">
+                        <button class="queue-add-btn" title="Add to Queue" data-song='{"id":"<%= song._id %>","title":"<%= song.title %>","artist":"<%= song.artist %>","albumArt":"<%= song.coverUrl || song.albumArt %>","audioUrl":"<%= song.audioUrl %>"}'>
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M18 12V9h-2v3h-3v2h3v3h2v-3h3v-2h-3zM4 10H2v2h2v-2zm0-4H2v2h2V6zm0 8H2v2h2v-2zm10-8H6v2h8V6zm0 4H6v2h8v-2zm0 4H6v2h8v-2z"></path></svg>
+                        </button>
+                        <button class="play-btn" data-song='{"id":"<%= song._id %>","title":"<%= song.title %>","artist":"<%= song.artist %>","albumArt":"<%= song.coverUrl || song.albumArt %>","audioUrl":"<%= song.audioUrl %>"}'>
+                            <svg width="24" height="24" fill="black" viewBox="0 0 24 24"><path d="M7.05 3.606l13.49 7.788a.7.7 0 0 1 0 1.212L7.05 20.394A.7.7 0 0 1 6 19.788V4.212a.7.7 0 0 1 1.05-.606z"></path></svg>
+                        </button>
+                    </div>
                 </div>
-                
-                <button id="languageSelection">Language</button>
-            
-            </footer>
-        </div>
-    
-
-        <div id="main">
-
-            <h2 id="trendingSongsLabel">Trending Songs</h2>
-            <!-- <br> -->
-
-            <div class="row">
-
-                <div class="songCard"></div>
-                <div class="songCard"></div>
-                <div class="songCard"></div>
-                <div class="songCard"></div>
-                <div class="songCard"></div>
-                <div class="songCard"></div>
-                <div class="songCard"></div>
-                <div class="songCard"></div>
-                <div class="songCard"></div>
-                <div class="songCard"></div>
-
+                <h3><%= song.title %></h3>
+                <p><%= song.artist %></p>
             </div>
-
-    
-
-            <h2 id="popularArtistsLabel">Popular Artists</h2>
-            
-            <div class="row">
-
-                <div class="artistCard"></div>
-                <div class="artistCard"></div>
-                <div class="artistCard"></div>
-                <div class="artistCard"></div>
-                <div class="artistCard"></div>
-                <div class="artistCard"></div>
-                <div class="artistCard"></div>
-                <div class="artistCard"></div>
-                <div class="artistCard"></div>
-                <div class="artistCard"></div>
-
-            </div>
-
-            <h2 id="popularAlbumsLabel">Popular Albums and Singles</h2>
-
-            <div class="row">
-
-                <div class="songCard"></div>
-                <div class="songCard"></div>
-                <div class="songCard"></div>
-                <div class="songCard"></div>
-                <div class="songCard"></div>
-                <div class="songCard"></div>
-                <div class="songCard"></div>
-                <div class="songCard"></div>
-                <div class="songCard"></div>
-                <div class="songCard"></div>
-
-            </div>
-
-            
-        
-        </div>
-
+        <% }) %>
     </div>
+</section>
 
+<section style="margin-top: 48px;">
+    <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 24px;">Latest Additions</h2>
+    <div class="song-grid">
+        <% latestSongs.forEach(song => { %>
+            <div class="song-card">
+                <div class="img-container">
+                    <img src="<%= song.coverUrl || song.albumArt %>" onerror="this.src='/images/Your_Library.svg'">
+                    <div class="card-actions">
+                        <button class="queue-add-btn" title="Add to Queue" data-song='{"id":"<%= song._id %>","title":"<%= song.title %>","artist":"<%= song.artist %>","albumArt":"<%= song.coverUrl || song.albumArt %>","audioUrl":"<%= song.audioUrl %>"}'>
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M18 12V9h-2v3h-3v2h3v3h2v-3h3v-2h-3zM4 10H2v2h2v-2zm0-4H2v2h2V6zm0 8H2v2h2v-2zm10-8H6v2h8V6zm0 4H6v2h8v-2zm0 4H6v2h8v-2z"></path></svg>
+                        </button>
+                        <button class="play-btn" data-song='{"id":"<%= song._id %>","title":"<%= song.title %>","artist":"<%= song.artist %>","albumArt":"<%= song.coverUrl || song.albumArt %>","audioUrl":"<%= song.audioUrl %>"}'>
+                            <svg width="24" height="24" fill="black" viewBox="0 0 24 24"><path d="M7.05 3.606l13.49 7.788a.7.7 0 0 1 0 1.212L7.05 20.394A.7.7 0 0 1 6 19.788V4.212a.7.7 0 0 1 1.05-.606z"></path></svg>
+                        </button>
+                    </div>
+                </div>
+                <h3><%= song.title %></h3>
+                <p><%= song.artist %></p>
+            </div>
+        <% }) %>
+    </div>
+</section>
 
-    <nav class="bottomNav">
-
-        <button class="navItem">
-        <span class="icon">
-            <img src="/images/Home.svg" alt="home" >
-        </span>
-        <span class="label">Home</span>
-        </button>
-
-        <button class="navItem">
-            <span class="icon">
-                <img src="/images/Search.svg" alt="search">
-            </span>
-            <span class="label">Search</span>
-        </button>
-
-        <button class="navItem">
-            <span class="icon">
-                <img src="/images/Your_Library.svg" alt="Your Library">
-            </span>
-            <span class="label">Your Library</span>
-        </button>
-
-    </nav>
-
-
-
-
-    <!-- ------------------------- Script ---------------------------- -->
-
-    <script src="/script.js"></script>
-
-</body>
-</html>
+<%- include('partials/footer') %>

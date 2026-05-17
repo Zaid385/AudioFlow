@@ -1,0 +1,57 @@
+<%- include('partials/header') %>
+
+<div style="padding: 40px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;">
+        <h1 style="font-size: 32px; font-weight: 800;">My Playlists</h1>
+        <button id="mainCreatePlaylistBtn" class="btn-login" style="padding: 12px 32px; border: none; cursor: pointer;">Create Playlist</button>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 24px;">
+        <% playlists.forEach(playlist => { %>
+            <a href="/playlists/<%= playlist._id %>" style="text-decoration: none; color: inherit;">
+                <div class="song-card" style="height: 100%;">
+                    <div class="img-container">
+                        <% if (playlist.songs.length >= 4) { %>
+                            <div class="playlist-cover grid-4">
+                                <img src="<%= playlist.songs[0].coverUrl || playlist.songs[0].albumArt %>">
+                                <img src="<%= playlist.songs[1].coverUrl || playlist.songs[1].albumArt %>">
+                                <img src="<%= playlist.songs[2].coverUrl || playlist.songs[2].albumArt %>">
+                                <img src="<%= playlist.songs[3].coverUrl || playlist.songs[3].albumArt %>">
+                            </div>
+                        <% } else if (playlist.songs.length === 3) { %>
+                            <div class="playlist-cover grid-3">
+                                <img src="<%= playlist.songs[0].coverUrl || playlist.songs[0].albumArt %>">
+                                <img src="<%= playlist.songs[1].coverUrl || playlist.songs[1].albumArt %>">
+                                <img src="<%= playlist.songs[2].coverUrl || playlist.songs[2].albumArt %>">
+                            </div>
+                        <% } else if (playlist.songs.length === 2) { %>
+                            <div class="playlist-cover grid-2">
+                                <img src="<%= playlist.songs[0].coverUrl || playlist.songs[0].albumArt %>">
+                                <img src="<%= playlist.songs[1].coverUrl || playlist.songs[1].albumArt %>">
+                            </div>
+                        <% } else if (playlist.songs.length === 1) { %>
+                            <div class="playlist-cover single">
+                                <img src="<%= playlist.songs[0].coverUrl || playlist.songs[0].albumArt %>">
+                            </div>
+                        <% } else { %>
+                            <div class="playlist-cover placeholder">
+                                <img src="/images/Your_Library.svg" style="width: 24px; height: 24px; opacity: 0.3;">
+                            </div>
+                        <% } %>
+                    </div>
+                    <h3><%= playlist.name %></h3>
+                    <p><%= playlist.songs.length %> songs</p>
+                </div>
+            </a>
+        <% }) %>
+    </div>
+</div>
+
+<script>
+    document.getElementById('mainCreatePlaylistBtn')?.addEventListener('click', () => {
+        const modal = document.getElementById('createPlaylistModal');
+        if (modal) modal.style.display = 'flex';
+    });
+</script>
+
+<%- include('partials/footer') %>

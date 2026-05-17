@@ -13,3 +13,11 @@ closeMenu.addEventListener("click", () => {
     hamburger.classList.remove("active");
     mobileMenu.classList.remove("open");
 });
+
+// Auto-hide alerts
+const alerts = document.querySelectorAll('.alert');
+alerts.forEach(alert => {
+    setTimeout(() => {
+        (alert as HTMLElement).style.display = 'none';
+    }, 5000);
+});

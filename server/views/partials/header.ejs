@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AudioFlow - <%= title %></title>
+    <link rel="icon" type="image/icon" href="/images/AudioFLow_icon_green.svg">
+    <link rel="stylesheet" href="/style.css">
+    <script src="https://unpkg.com/fast-average-color/dist/index.browser.min.js"></script>
+</head>
+<body>
+    
+    <% if (success && success.length > 0) { %>
+        <div class="alert alert-success"><%= success %></div>
+    <% } %>
+    <% if (error && error.length > 0) { %>
+        <div class="alert alert-error"><%= error %></div>
+    <% } %>
+
+    <div class="app-container <%= user ? 'user-logged-in' : 'user-logged-out' %>">
+        <!-- Resize Handles -->
+        <div class="resize-handle resize-handle-left" id="sidebarResizer"></div>
+        <% if (user) { %>
+            <div class="resize-handle resize-handle-right" id="panelResizer"></div>
+        <% } %>
+
+        <!-- Left Sidebar -->
+        <aside class="sidebar">
+            <nav class="sidebar-nav">
+                <a href="/" class="<%= title === 'Home' ? 'active' : '' %>">
+                    <img src="/images/Home.svg" width="24" height="24">
+                    Home
+                </a>
+                <a href="/songs" class="<%= title === 'Music Library' ? 'active' : '' %>">
+                    <img src="/images/Search.svg" width="24" height="24">
+                    Search
+                </a>
+                <% if (user && user.role === 'admin') { %>
+                    <a href="/admin/manage-songs" class="<%= title === 'Manage Songs' ? 'active' : '' %>" style="color: var(--spotify-green);">
+                        <img src="/images/Your_Library.svg" width="24" height="24" style="filter: hue-rotate(90deg);">
+                        Manage Songs
+                    </a>
+                <% } %>
+            </nav>
+
+            <div class="sidebar-library">
+                <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <a href="/playlists" style="display: flex; align-items: center; gap: 12px; color: var(--text-muted); font-weight: bold; text-decoration: none; transition: color 0.2s;">
+                        <img src="/images/Your_Library.svg" width="24" height="24">
+                        Your Library
+                    </a>
+                    <% if (user) { %>
+                        <div id="createPlaylistBtn" style="color: var(--text-muted); font-size: 24px; cursor: pointer; transition: color 0.2s;">+</div>
+                    <% } %>
+                </header>
+
+                <div id="playlistList" style="flex: 1; display: flex; flex-direction: column; gap: 4px; overflow-y: auto;">
+                    <% if (user) { %>
+                        <p id="playlistPlaceholder" style="color: var(--text-muted); font-size: 14px; padding: 10px;">Your playlists will appear here.</p>
+                    <% } else { %>
+                        <div style="background: #242424; padding: 16px; border-radius: 8px; margin-top: 10px;">
+                            <p style="font-weight: bold; margin-bottom: 8px;">Create your first playlist</p>
+                            <p style="font-size: 14px; margin-bottom: 20px;">It's easy, we'll help you</p>
+                            <a href="/login" class="btn-login" style="display: inline-block; font-size: 14px; padding: 8px 16px;">Log in</a>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main View -->
+        <main class="main-view">
+            <header class="top-bar">
+                <div class="nav-left-spacer"></div>
+
+                <div class="nav-center">
+                    <form action="/songs" method="GET" class="searchBar">
+                        <img src="/images/Search.svg" alt="search">
+                        <input type="text" name="search" placeholder="What do you want to play?" value="<%= typeof search !== 'undefined' ? search : '' %>" autocomplete="off">
+                    </form>
+                    <div id="searchSuggestions" style="position: absolute; top: 110%; left: 0; right: 0; background: #282828; border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); z-index: 200; display: none; overflow: hidden;">
+                        <!-- Suggestions populated via JS -->
+                    </div>
+                </div>
+
+                <div class="auth-actions">
+                    <% if (user) { %>
+                        <div style="display: flex; align-items: center; gap: 16px;">
+                            <% if (user.role === 'admin') { %>
+                                <a href="/admin/manage-songs" style="color: var(--spotify-green); text-decoration: none; font-weight: bold; font-size: 14px;">Manage Songs</a>
+                            <% } %>
+                            <a href="/profile" class="profile-pill" style="text-decoration: none; color: white;">
+                                <div style="width: 28px; height: 28px; background: #535353; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+                                    <%= user.name.charAt(0).toUpperCase() %>
+                                </div>
+                                <span style="font-size: 14px; font-weight: bold;"><%= user.name %></span>
+                            </a>
+                        </div>
+                    <% } else { %>
+                        <a href="/register" class="btn-signup">Sign up</a>
+                        <a href="/login" class="btn-login">Log in</a>
+                    <% } %>
+                </div>
+            </header>
+
+            <div class="main-content">
