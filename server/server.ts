@@ -17,12 +17,18 @@ const app = express();
 // Database connection
 connectDB();
 
+// Trust Render's proxy (Essential for secure cookies on Render)
+app.set('trust proxy', 1);
+
 // Views engine
 app.set("view engine", "ejs");
 app.set("views", path.join(process.cwd(), "views"));
 
 // Middlewares
-app.use(cors());
+app.use(cors({
+  origin: process.env.NODE_ENV === 'production' ? process.env.APP_URL : '*',
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(process.cwd(), "public")));
@@ -38,6 +44,8 @@ app.use(session({
     collectionName: 'sessions'
   }),
   cookie: {
+    secure: process.env.NODE_ENV === 'production', // true in production
+    httpOnly: true,
     maxAge: 1000 * 60 * 60 * 24 // 24 hours
   }
 }));
