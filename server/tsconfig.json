@@ -10,5 +10,9 @@
     "skipLibCheck": true,
     "typeRoots": ["./node_modules/@types", "./src/types"]
   },
+  "include": [
+    "server.ts",
+    "src/**/*"
+  ],
   "exclude": ["node_modules", "dist", "public"]
 }
