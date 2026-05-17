@@ -1,2 +1,36 @@
+# Dependencies
 node_modules/
 package-lock.json
+
+# Environment Variables (Sensitive)
+.env
+.env.*
+
+# Build Directories
+dist/
+build/
+server/dist/
+
+# Frontend Compiled JS
+server/public/js/*.js
+!server/public/js/main.js
+
+# Uploads and Temporary Files
+server/public/uploads/
+server/public/uploads/temp/*
+server/public/uploads/audio/*
+server/public/uploads/images/*
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# IDE Settings
+.vscode/
+.idea/
