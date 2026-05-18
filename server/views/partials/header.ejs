@@ -71,7 +71,9 @@
         <!-- Main View -->
         <main class="main-view">
             <header class="top-bar">
-                <div class="nav-left-spacer"></div>
+                <div class="nav-left-spacer mobile-only-header">
+                    <img src="/images/AudioFLow_icon_white.svg" height="32" width="32" alt="Logo">
+                </div>
 
                 <div class="nav-center">
                     <form action="/songs" method="GET" class="searchBar">
@@ -83,7 +85,7 @@
                     </div>
                 </div>
 
-                <div class="auth-actions">
+                <div class="auth-actions desktop-only">
                     <% if (user) { %>
                         <div style="display: flex; align-items: center; gap: 16px;">
                             <% if (user.role === 'admin') { %>
@@ -101,6 +103,36 @@
                         <a href="/login" class="btn-login">Log in</a>
                     <% } %>
                 </div>
+                
+                <div class="mobile-hamburger mobile-only">
+                    <button id="mobileMenuBtn" style="background: none; border: none; color: white; cursor: pointer;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"></path></svg>
+                    </button>
+                </div>
             </header>
+
+            <!-- Mobile Hamburger Menu Overlay -->
+            <div id="mobileMenuOverlay" class="mobile-menu-overlay">
+                <div class="mobile-menu-content">
+                    <button id="closeMobileMenuBtn" style="background: none; border: none; color: white; cursor: pointer; align-self: flex-end; margin-bottom: 24px;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"></path></svg>
+                    </button>
+                    <% if (user) { %>
+                        <a href="/profile" class="mobile-menu-link">
+                            <div style="width: 40px; height: 40px; background: #535353; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px;">
+                                <%= user.name.charAt(0).toUpperCase() %>
+                            </div>
+                            <span>Profile</span>
+                        </a>
+                        <% if (user.role === 'admin') { %>
+                            <a href="/admin/manage-songs" class="mobile-menu-link">Manage Songs</a>
+                        <% } %>
+                        <a href="/logout" class="mobile-menu-link">Log out</a>
+                    <% } else { %>
+                        <a href="/login" class="mobile-menu-link">Log in</a>
+                        <a href="/register" class="mobile-menu-link">Sign up</a>
+                    <% } %>
+                </div>
+            </div>
 
             <div class="main-content">

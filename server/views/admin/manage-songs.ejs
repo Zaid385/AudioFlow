@@ -1,22 +1,22 @@
 <%- include('../partials/header') %>
 
-<div style="padding: 40px;">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;">
+<div class="admin-container">
+    <div class="admin-header-row">
         <h1 style="font-size: 32px; font-weight: 800;">Manage Songs</h1>
     </div>
 
     <!-- Upload Song Section -->
-    <div style="background: #181818; padding: 32px; border-radius: 12px; margin-bottom: 48px; box-shadow: 0 8px 24px rgba(0,0,0,0.3);">
+    <div class="admin-section">
         <h2 style="font-size: 20px; font-weight: 700; margin-bottom: 24px; color: white;">Upload New Song</h2>
         
-        <form id="adminUploadForm" class="admin-form" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+        <form id="adminUploadForm" class="admin-form">
             <!-- Hidden internal fields -->
             <input type="hidden" name="tempFilePath" id="tempFilePath">
             <input type="hidden" name="tempArtPath" id="tempArtPath">
             <input type="hidden" name="duration" id="songDuration">
 
             <!-- Drag and Drop Area -->
-            <div id="dropArea" style="grid-column: span 2; border: 2px dashed #333; border-radius: 8px; padding: 40px; text-align: center; background: #121212; transition: all 0.3s; cursor: pointer; position: relative;">
+            <div id="dropArea" class="full-width" style="border: 2px dashed #333; border-radius: 8px; padding: 40px; text-align: center; background: #121212; transition: all 0.3s; cursor: pointer; position: relative;">
                 <div id="dropContent">
                     <img src="/images/Your_Library.svg" width="48" height="48" style="opacity: 0.3; margin-bottom: 16px;">
                     <p style="color: var(--text-muted); font-size: 16px; margin-bottom: 8px;">Drag and drop audio files here</p>
@@ -47,7 +47,7 @@
                 <input type="text" name="album" id="formAlbum" placeholder="Enter album name" style="width: 100%; padding: 12px; border-radius: 4px; border: 1px solid #333; background: #282828; color: white;">
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div class="form-row-2">
                 <div>
                     <label style="display: block; color: var(--text-muted); font-size: 12px; font-weight: bold; margin-bottom: 8px; text-transform: uppercase;">Genre</label>
                     <input type="text" name="genre" id="formGenre" placeholder="Pop, Rock, etc." style="width: 100%; padding: 12px; border-radius: 4px; border: 1px solid #333; background: #282828; color: white;">
@@ -58,27 +58,27 @@
                 </div>
             </div>
 
-            <div style="grid-column: span 2; display: flex; gap: 24px; align-items: flex-end;">
-                <div id="coverPreviewContainer" style="width: 120px; height: 120px; background: #282828; border-radius: 8px; overflow: hidden; display: flex; align-items: center; justify-content: center; border: 1px solid #333;">
+            <div class="cover-upload-row">
+                <div id="coverPreviewContainer" style="width: 120px; height: 120px; background: #282828; border-radius: 8px; overflow: hidden; display: flex; align-items: center; justify-content: center; border: 1px solid #333; flex-shrink: 0;">
                     <img id="formCoverPreview" src="" style="width: 100%; height: 100%; object-fit: cover; display: none;">
                     <span id="coverPlaceholder" style="color: #444; font-size: 10px; text-align: center; padding: 10px;">No Cover Art</span>
                 </div>
-                <div style="flex: 1;">
+                <div style="flex: 1; width: 100%;">
                     <label style="display: block; color: var(--text-muted); font-size: 12px; font-weight: bold; margin-bottom: 8px; text-transform: uppercase;">Change Cover Image</label>
                     <input type="file" id="coverArtInput" name="coverArt" accept="image/*" style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #333; background: #282828; color: white;">
                 </div>
-                <div>
+                <div style="width: 80px;" class="track-num-container">
                     <label style="display: block; color: var(--text-muted); font-size: 12px; font-weight: bold; margin-bottom: 8px; text-transform: uppercase;">Track #</label>
-                    <input type="number" name="trackNumber" id="formTrackNumber" placeholder="1" style="width: 80px; padding: 12px; border-radius: 4px; border: 1px solid #333; background: #282828; color: white;">
+                    <input type="number" name="trackNumber" id="formTrackNumber" placeholder="1" style="width: 100%; padding: 12px; border-radius: 4px; border: 1px solid #333; background: #282828; color: white;">
                 </div>
             </div>
 
-            <div style="grid-column: span 2; display: flex; align-items: center; gap: 24px; margin-top: 12px;">
-                <button type="submit" id="uploadBtn" class="btn-login" style="padding: 14px 48px; border: none; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 12px;">
+            <div class="submit-row">
+                <button type="submit" id="uploadBtn" class="btn-login" style="padding: 14px 48px; border: none; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 12px;">
                     <span>Upload Song</span>
                     <div id="uploadLoader" class="loader" style="display: none; width: 16px; height: 16px; border-width: 2px;"></div>
                 </button>
-                <div id="uploadProgress" style="flex: 1; height: 4px; background: #333; border-radius: 2px; overflow: hidden; display: none;">
+                <div id="uploadProgress" style="flex: 1; width: 100%; height: 4px; background: #333; border-radius: 2px; overflow: hidden; display: none;">
                     <div id="uploadProgressBar" style="width: 0%; height: 100%; background: var(--spotify-green); transition: width 0.3s;"></div>
                 </div>
             </div>
@@ -86,11 +86,11 @@
     </div>
 
     <!-- Existing Songs Management Section -->
-    <div style="background: #181818; padding: 32px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.3);">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-            <h2 style="font-size: 20px; font-weight: 700; color: white;">Library Management</h2>
-            <div style="display: flex; gap: 16px; align-items: center;">
-                <button id="batchDeleteBtn" class="btn-login" style="background: #ff4444; border: none; padding: 8px 16px; font-size: 12px; display: none;">Delete Selected (<span id="selectedCount">0</span>)</button>
+    <div class="admin-section">
+        <div class="library-mgmt-header">
+            <h2 style="font-size: 20px; font-weight: 700; color: white; margin-bottom: 0;">Library Management</h2>
+            <div class="header-actions">
+                <button id="batchDeleteBtn" class="btn-login" style="background: #ff4444; border: none; padding: 8px 16px; font-size: 12px; display: none;">Delete (<span id="selectedCount">0</span>)</button>
                 <button id="toggleSelectBtn" style="background: none; border: 1px solid #333; color: white; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold;">Select</button>
                 <button id="refreshLibraryBtn" style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 12px; font-weight: bold;">Refresh List</button>
             </div>
@@ -104,7 +104,7 @@
 
 <!-- Edit Song Modal -->
 <div class="modal-overlay" id="editSongModal">
-    <div class="modal-content" style="max-width: 500px;">
+    <div class="modal-content" style="max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto;">
         <h3 style="margin-top: 0; margin-bottom: 24px;">Edit Song Details</h3>
         <form id="editSongForm" style="display: flex; flex-direction: column; gap: 16px;">
             <input type="hidden" name="id" id="editSongId">
@@ -112,7 +112,7 @@
                 <img id="editCoverPreview" src="" style="width: 80px; height: 80px; border-radius: 4px; object-fit: cover; border: 1px solid #333;">
                 <div style="flex: 1;">
                     <label style="display: block; color: var(--text-muted); font-size: 10px; font-weight: bold; margin-bottom: 4px;">UPDATE COVER</label>
-                    <input type="file" name="coverArt" accept="image/*" style="font-size: 12px; color: var(--text-muted);">
+                    <input type="file" name="coverArt" accept="image/*" style="font-size: 12px; color: var(--text-muted); width: 100%;">
                 </div>
             </div>
             <div>
@@ -127,7 +127,7 @@
                 <label style="display: block; color: var(--text-muted); font-size: 12px; font-weight: bold; margin-bottom: 8px;">ALBUM</label>
                 <input type="text" name="album" id="editAlbum" style="width: 100%; padding: 12px; border-radius: 4px; border: 1px solid #333; background: #121212; color: white;">
             </div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div class="form-row-2">
                 <div>
                     <label style="display: block; color: var(--text-muted); font-size: 12px; font-weight: bold; margin-bottom: 8px;">GENRE</label>
                     <input type="text" name="genre" id="editGenre" style="width: 100%; padding: 12px; border-radius: 4px; border: 1px solid #333; background: #121212; color: white;">
@@ -137,10 +137,10 @@
                     <input type="number" name="year" id="editYear" style="width: 100%; padding: 12px; border-radius: 4px; border: 1px solid #333; background: #121212; color: white;">
                 </div>
             </div>
-            <div style="display: flex; gap: 12px; margin-top: 24px;">
-                <button type="submit" class="btn-login" style="flex: 1; padding: 12px; border: none; cursor: pointer;">Save Changes</button>
+            <div style="display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap;">
+                <button type="submit" class="btn-login" style="flex: 1; padding: 12px; border: none; cursor: pointer; min-width: 120px;">Save Changes</button>
                 <button type="button" onclick="document.getElementById('editSongModal').style.display='none'" 
-                        style="flex: 1; background: none; border: 1px solid #444; color: white; border-radius: 500px; cursor: pointer;">Cancel</button>
+                        style="flex: 1; background: none; border: 1px solid #444; color: white; border-radius: 500px; cursor: pointer; min-width: 120px;">Cancel</button>
             </div>
         </form>
     </div>
@@ -148,16 +148,16 @@
 
 <!-- Delete Confirmation Modal -->
 <div class="modal-overlay" id="deleteSongModal">
-    <div class="modal-content" style="max-width: 400px; text-align: center;">
+    <div class="modal-content" style="max-width: 400px; width: 90%; text-align: center;">
         <h3 style="margin-top: 0; color: #ff4444;">Delete Song?</h3>
         <p style="color: var(--text-muted); margin-bottom: 32px;">This action cannot be undone. The song will be permanently removed from the library and Cloudinary.</p>
-        <div style="display: flex; gap: 12px;">
-            <button id="confirmDeleteBtn" class="btn-login" style="flex: 1; background: #ff4444; padding: 12px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <button id="confirmDeleteBtn" class="btn-login" style="flex: 1; background: #ff4444; padding: 12px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; min-width: 120px;">
                 <span>Delete</span>
                 <div id="deleteLoader" class="loader" style="display: none; width: 16px; height: 16px; border-width: 2px;"></div>
             </button>
             <button id="cancelDeleteBtn" onclick="document.getElementById('deleteSongModal').style.display='none'" 
-                    style="flex: 1; background: none; border: 1px solid #444; color: white; border-radius: 500px; cursor: pointer;">Cancel</button>
+                    style="flex: 1; background: none; border: 1px solid #444; color: white; border-radius: 500px; cursor: pointer; min-width: 120px;">Cancel</button>
         </div>
     </div>
 </div>
@@ -171,9 +171,22 @@
     }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     
+    .admin-container { padding: 40px; }
+    .admin-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+    .admin-section { background: #181818; padding: 32px; border-radius: 12px; margin-bottom: 48px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+    
+    .admin-form { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .cover-upload-row { grid-column: span 2; display: flex; gap: 24px; align-items: flex-end; }
+    .submit-row { grid-column: span 2; display: flex; align-items: center; gap: 24px; margin-top: 12px; }
+    .full-width { grid-column: span 2; }
+    
+    .library-mgmt-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+    .header-actions { display: flex; gap: 16px; align-items: center; }
+
     .admin-song-row {
         display: grid;
-        grid-template-columns: 56px 2fr 2fr 2fr 80px 120px 120px;
+        grid-template-columns: 56px 3fr 2fr 80px 120px 120px;
         align-items: center;
         gap: 16px;
         padding: 12px 16px;
@@ -182,7 +195,7 @@
         transition: background 0.2s;
     }
     .admin-song-row.selecting {
-        grid-template-columns: 32px 56px 2fr 2fr 2fr 80px 120px 120px;
+        grid-template-columns: 32px 56px 3fr 2fr 80px 120px 120px;
     }
     .admin-song-row:hover { background: #2a2a2a; }
     
@@ -204,6 +217,37 @@
     input:focus {
         border-color: #535353 !important;
         outline: none;
+    }
+
+    @media (max-width: 768px) {
+        .admin-container { padding: 16px 12px; }
+        .admin-header-row { margin-bottom: 24px; }
+        .admin-section { padding: 16px; margin-bottom: 24px; }
+        
+        .admin-form { grid-template-columns: 1fr; gap: 16px; }
+        .form-row-2 { grid-template-columns: 1fr; }
+        .cover-upload-row { grid-column: span 1; flex-direction: column; align-items: flex-start; gap: 16px; }
+        .submit-row { grid-column: span 1; flex-direction: column; align-items: stretch; gap: 16px; text-align: center; }
+        .full-width { grid-column: span 1; }
+        .track-num-container { width: 100% !important; }
+        
+        .library-mgmt-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+        .header-actions { width: 100%; justify-content: space-between; gap: 8px; }
+
+        .admin-song-row {
+            grid-template-columns: 40px 1fr auto !important;
+            padding: 12px 8px !important;
+            gap: 8px !important;
+        }
+        .admin-song-row.selecting {
+            grid-template-columns: 24px 40px 1fr auto !important;
+        }
+        .admin-song-row > div:nth-child(4), /* Album */
+        .admin-song-row > div:nth-child(5), /* Genre/duration logic */
+        .admin-song-row > div:nth-child(6), /* Duration */
+        .admin-song-row > div:nth-child(7)  /* Date */ {
+            display: none !important;
+        }
     }
 </style>
 

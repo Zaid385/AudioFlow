@@ -1,13 +1,12 @@
 <%- include('partials/header') %>
 
-<div style="padding: 40px;">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;">
-        <h1 style="font-size: 32px; font-weight: 800;">My Playlists</h1>
-        <button id="mainCreatePlaylistBtn" class="btn-login" style="padding: 12px 32px; border: none; cursor: pointer;">Create Playlist</button>
+<div class="playlists-container">
+    <div class="playlists-header-row">
+        <h1 style="font-size: 32px; font-weight: 800; margin: 0;">My Playlists</h1>
+        <button id="mainCreatePlaylistBtn" class="btn-login create-playlist-btn">Create Playlist</button>
     </div>
-    
-    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 24px;">
-        <% playlists.forEach(playlist => { %>
+
+    <div class="playlists-grid">        <% playlists.forEach(playlist => { %>
             <a href="/playlists/<%= playlist._id %>" style="text-decoration: none; color: inherit;">
                 <div class="song-card" style="height: 100%;">
                     <div class="img-container">

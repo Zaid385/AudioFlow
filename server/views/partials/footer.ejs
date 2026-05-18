@@ -12,9 +12,36 @@
         <% } %>
 
         <!-- Bottom Player -->
-        <footer class="player-container">
+        <footer class="player-container" id="playerContainer">
             <%- include('player') %>
         </footer>
+
+        <!-- Mobile Bottom Nav -->
+        <nav class="mobile-bottom-nav mobile-only">
+            <a href="/" class="mobile-nav-item">
+                <img src="/images/Home.svg" width="24" height="24">
+                <span>Home</span>
+            </a>
+            <a href="/songs" class="mobile-nav-item">
+                <img src="/images/Search.svg" width="24" height="24">
+                <span>Search</span>
+            </a>
+            <a href="/playlists" class="mobile-nav-item">
+                <img src="/images/Your_Library.svg" width="24" height="24">
+                <span>Your Library</span>
+            </a>
+            <% if (user) { %>
+                <div class="mobile-nav-item" onclick="document.getElementById('createPlaylistModal').style.display='flex'">
+                    <span style="font-size: 24px; line-height: 24px;">+</span>
+                    <span>Create</span>
+                </div>
+            <% } else { %>
+                <a href="/login" class="mobile-nav-item">
+                    <span style="font-size: 24px; line-height: 24px;">+</span>
+                    <span>Create</span>
+                </a>
+            <% } %>
+        </nav>
     </div>
 
     <!-- Modal Overlay: Add to Playlist -->

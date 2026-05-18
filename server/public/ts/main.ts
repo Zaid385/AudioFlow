@@ -184,6 +184,18 @@ class AudioPlayer {
         this.highlightActiveCard();
         this.updateLibraryActiveStates();
         this.setupPlaylistPlayAll();
+        this.setupMainCreatePlaylistBtn();
+    }
+
+    private setupMainCreatePlaylistBtn() {
+        const btn = document.getElementById('mainCreatePlaylistBtn');
+        if (btn) {
+            // Remove old listener to avoid duplicates if any (though innerHTML replaces it anyway)
+            btn.addEventListener('click', () => {
+                const modal = document.getElementById('createPlaylistModal');
+                if (modal) modal.style.display = 'flex';
+            });
+        }
     }
 
     private updateLibraryActiveStates() {
@@ -233,6 +245,45 @@ class AudioPlayer {
         const createPlaylistBtn = document.getElementById('createPlaylistBtn');
         const confirmCreateBtn = document.getElementById('confirmCreatePlaylist');
         const likeBtn = document.getElementById('playerLikeBtn');
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const closeMobileMenuBtn = document.getElementById('closeMobileMenuBtn');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+        const playerContainer = document.getElementById('playerContainer');
+        const minimizePlayerBtn = document.getElementById('minimizePlayerBtn');
+
+        mobileMenuBtn?.addEventListener('click', () => mobileMenuOverlay?.classList.add('open'));
+        closeMobileMenuBtn?.addEventListener('click', () => mobileMenuOverlay?.classList.remove('open'));
+        mobileMenuOverlay?.addEventListener('click', (e) => {
+            const target = e.target as HTMLElement;
+            if (target === mobileMenuOverlay || target.closest('a')) {
+                mobileMenuOverlay.classList.remove('open');
+            }
+        });
+        
+        // Fullscreen player toggle
+        playerContainer?.addEventListener('click', (e) => {
+            const target = e.target as HTMLElement;
+            // Prevent maximizing if clicking controls
+            if (target.closest('button') || target.closest('#progressBarContainer') || target.closest('#volumeBarContainer')) return;
+            if (window.innerWidth <= 768 && !playerContainer.classList.contains('fullscreen')) {
+                playerContainer.classList.add('fullscreen');
+            }
+        });
+        
+        minimizePlayerBtn?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            playerContainer?.classList.remove('fullscreen');
+        });
+
+        // Swipe down to minimize
+        let touchStartY = 0;
+        playerContainer?.addEventListener('touchstart', e => { touchStartY = e.touches[0].clientY; }, {passive: true});
+        playerContainer?.addEventListener('touchend', e => {
+            const touchEndY = e.changedTouches[0].clientY;
+            if (touchEndY - touchStartY > 50 && playerContainer.classList.contains('fullscreen')) {
+                playerContainer.classList.remove('fullscreen');
+            }
+        });
 
         playPauseBtn?.addEventListener('click', () => this.togglePlay());
         prevBtn?.addEventListener('click', () => this.playPrevious());
@@ -409,8 +460,10 @@ class AudioPlayer {
         await this.fetchUserPlaylists();
         const list = document.getElementById('playlistList');
         if (!list) return;
+
+        const placeholder = document.getElementById('playlistPlaceholder');
         if (this.userPlaylists.length > 0) {
-            document.getElementById('playlistPlaceholder')!.style.display = 'none';
+            if (placeholder) placeholder.style.display = 'none';
             list.innerHTML = this.userPlaylists.map((p: any) => {
                 let coverHtml = '';
                 const songs = p.songs || [];
@@ -457,6 +510,9 @@ class AudioPlayer {
                 `;
             }).join('');
             this.updateLibraryActiveStates();
+        } else {
+            if (placeholder) placeholder.style.display = 'block';
+            list.innerHTML = '';
         }
     }
 
@@ -489,21 +545,37 @@ class AudioPlayer {
     }
 
     private async handleCreatePlaylist() {
-        const name = (document.getElementById('newPlaylistName') as HTMLInputElement).value.trim() || 'My Playlist';
+        const input = document.getElementById('newPlaylistName') as HTMLInputElement;
+        const name = input?.value.trim() || 'My Playlist';
         const token = localStorage.getItem('audioflow_token');
         if (!token) return this.showToast('Please log in');
+
         try {
             const res = await fetch('/api/v1/playlists', {
-                method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify({ name })
             });
-            if ((await res.json()).status === 'success') {
+
+            const data = await res.json();
+            if (data.status === 'success') {
                 this.showToast('Playlist created!');
-                document.getElementById('createPlaylistModal')!.style.display = 'none';
-                (document.getElementById('newPlaylistName') as HTMLInputElement).value = '';
-                await this.updatePlaylistSidebar();
+                const modal = document.getElementById('createPlaylistModal');
+                if (modal) modal.style.display = 'none';
+                if (input) input.value = '';
+                
+                await this.initLibrary(); // Refresh library and sidebar
+
+                if (window.location.pathname === '/playlists') {
+                    this.navigateTo('/playlists', false);
+                }
+            } else {
+                this.showToast(data.message || 'Failed to create playlist');
             }
-        } catch (err) { this.showToast('Failed to create playlist'); }
+        } catch (err) {
+            console.error('Create playlist error:', err);
+            this.showToast('Failed to create playlist');
+        }
     }
 
     private requireAuth(track?: Track): boolean {
@@ -641,23 +713,31 @@ class AudioPlayer {
             this.source.connect(this.analyser);
             this.analyser.connect(this.audioContext.destination);
         }
-        const canvas = document.getElementById('visualizerCanvas') as HTMLCanvasElement;
-        if (!canvas) return;
-        const ctx = canvas.getContext('2d')!;
+        
         this.analyser!.fftSize = 64;
         const bufferLength = this.analyser!.frequencyBinCount;
         const dataArray = new Uint8Array(bufferLength);
+        
         const draw = () => {
             this.animationId = requestAnimationFrame(draw);
             this.analyser!.getByteFrequencyData(dataArray);
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            const barWidth = (canvas.width / bufferLength) * 2.5;
-            let x = 0;
-            for (let i = 0; i < bufferLength; i++) {
-                const barHeight = (dataArray[i] / 255) * canvas.height;
-                ctx.fillStyle = 'white'; ctx.fillRect(x, canvas.height - barHeight, barWidth - 1, barHeight);
-                x += barWidth;
-            }
+            
+            const canvases = document.querySelectorAll('.visualizer-canvas');
+            canvases.forEach(canvasEl => {
+                const canvas = canvasEl as HTMLCanvasElement;
+                const ctx = canvas.getContext('2d');
+                if (!ctx) return;
+                
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                const barWidth = (canvas.width / bufferLength) * 2.5;
+                let x = 0;
+                for (let i = 0; i < bufferLength; i++) {
+                    const barHeight = (dataArray[i] / 255) * canvas.height;
+                    ctx.fillStyle = 'white'; 
+                    ctx.fillRect(x, canvas.height - barHeight, barWidth - 1, barHeight);
+                    x += barWidth;
+                }
+            });
         };
         draw();
     }
@@ -678,6 +758,34 @@ class AudioPlayer {
         if (dur && this.audio.duration) dur.textContent = this.formatTime(this.audio.duration);
 
         const details = document.getElementById('nowPlayingDetails');
+        const mobileDetails = document.getElementById('mobileFullscreenDetails');
+        
+        const detailsHtml = `
+            <canvas class="visualizer-canvas" width="300" height="60" style="width: 100%; margin-bottom: 16px; border-radius: 4px;"></canvas>
+            <div class="metadata-grid" style="margin-top: 0;">
+                <div class="meta-item"><span>Genre</span><span>${this.currentTrack.genre || 'Various'}</span></div>
+                <div class="meta-item"><span>Duration</span><span>${this.currentTrack.duration || '--'}</span></div>
+                <div class="meta-item"><span>Plays</span><span>${this.currentTrack.playCount || 0}</span></div>
+            </div>
+            <div class="actions-row">
+                <button class="btn-login add-to-playlist-btn" data-song-id="${this.currentTrack.id}" style="flex: 1;">Add to playlist</button>
+            </div>
+            <div class="queue-section">
+                <h3>Next in Queue</h3>
+                <div id="queueList">
+                    ${this.queue.length > 0 ? this.queue.map(q => `
+                        <div class="queue-item" onclick="window.player.playFromQueue('${q.id}')">
+                            <img src="${q.albumArt}">
+                            <div class="queue-item-info">
+                                <div class="queue-item-title">${q.title}</div>
+                                <div class="queue-item-artist">${q.artist}</div>
+                            </div>
+                        </div>
+                    `).join('') : '<p style="color: var(--text-muted); font-size: 12px;">Autoplay is on (random songs)</p>'}
+                </div>
+            </div>
+        `;
+
         if (details) {
             document.getElementById('rightPanel')!.classList.add('active');
             details.innerHTML = `
@@ -685,42 +793,26 @@ class AudioPlayer {
                     <img src="${this.currentTrack.albumArt}" class="main-art">
                     <div class="right-panel-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; gap: 16px;">
                         <div style="overflow: hidden; flex: 1;">
-                            <h2 class="track-title" style="margin: 0;">${this.currentTrack.title}</h2>
-                            <p class="track-artist" style="margin: 0; opacity: 0.7;">${this.currentTrack.artist}</p>
+                            <h2 class="track-title" style="margin: 0; font-size: 24px; font-weight: 800;">${this.currentTrack.title}</h2>
+                            <p class="track-artist" style="margin: 0; opacity: 0.7; font-size: 16px; font-weight: 600;">${this.currentTrack.artist}</p>
                         </div>
-                        <button id="sidebarHeartBtn" class="heart-btn" style="background: none; padding: 0; width: auto; height: auto; margin-top: 4px;">
+                        <button id="sidebarHeartBtn" class="heart-btn" style="background: none; padding: 0; width: 32px; height: 32px; margin-top: 4px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--text-muted); border: none; cursor: pointer;">
                             <svg id="sidebarHeart" width="24" height="24" viewBox="0 0 16 16" fill="currentColor"><path d="M1.69 2A4.582 4.582 0 0 1 8 2.023 4.583 4.583 0 0 1 14.31 2c1.908 0 3.182 1.534 3.182 3.286 0 1.98-.863 3.357-2.362 4.602l-7.13 5.903-7.13-5.903C.553 8.643-.31 7.266-.31 5.286-.31 3.534.965 2 2.872 2h-1.182z"></path></svg>
                         </button>
                     </div>
-                    <canvas id="visualizerCanvas" width="300" height="60"></canvas>
-                    <div class="metadata-grid">
-                        <div class="meta-item"><span>Genre</span><span>${this.currentTrack.genre || 'Various'}</span></div>
-                        <div class="meta-item"><span>Duration</span><span>${this.currentTrack.duration || '--'}</span></div>
-                        <div class="meta-item"><span>Plays</span><span>${this.currentTrack.playCount || 0}</span></div>
-                    </div>
-                    <div class="actions-row">
-                        <button class="btn-login add-to-playlist-btn" data-song-id="${this.currentTrack.id}" style="flex: 1;">Add to playlist</button>
-                    </div>
-                    <div class="queue-section">
-                        <h3>Next in Queue</h3>
-                        <div id="queueList">
-                            ${this.queue.length > 0 ? this.queue.map(q => `
-                                <div class="queue-item" onclick="window.player.playFromQueue('${q.id}')">
-                                    <img src="${q.albumArt}">
-                                    <div class="queue-item-info">
-                                        <div class="queue-item-title">${q.title}</div>
-                                        <div class="queue-item-artist">${q.artist}</div>
-                                    </div>
-                                </div>
-                            `).join('') : '<p style="color: var(--text-muted); font-size: 12px;">Autoplay is on (random songs)</p>'}
-                        </div>
-                    </div>
+                    ${detailsHtml}
                 </div>
             `;
             document.getElementById('sidebarHeartBtn')?.addEventListener('click', () => this.handleHeartClick());
-            this.updateHeartIcon();
-            if (this.isPlaying) this.startVisualizer();
         }
+
+        if (mobileDetails) {
+            mobileDetails.innerHTML = detailsHtml;
+            // Also update heart icon in mobile layout if needed. Using playerLikeBtn works since it's already there.
+        }
+
+        this.updateHeartIcon();
+        if (this.isPlaying) this.startVisualizer();
         this.highlightActiveCard();
     }
 
@@ -798,6 +890,7 @@ class AudioPlayer {
                 this.showToast('Added');
                 document.getElementById('playlistModal')!.style.display = 'none';
                 await this.initLibrary();
+                if (window.location.pathname.includes(`/playlists/${pid}`)) this.navigateTo(window.location.href, false);
             }
         } catch (e) {}
     }
@@ -880,11 +973,13 @@ class AudioPlayer {
             <div class="admin-song-row ${this.isAdminSelecting ? 'selecting' : ''}">
                 <input type="checkbox" class="batch-checkbox" data-id="${s._id}" ${this.selectedSongIds.has(s._id) ? 'checked' : ''}>
                 <img src="${s.coverUrl || s.albumArt}" style="width: 40px; height: 40px; border-radius: 4px; object-fit: cover;">
-                <div style="font-weight: bold; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${s.title}</div>
-                <div style="color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${s.artist}</div>
-                <div style="color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${s.album}</div>
-                <div style="color: var(--text-muted);">${s.duration}</div>
-                <div style="color: #535353; font-size: 12px;">${new Date(s.createdAt).toLocaleDateString()}</div>
+                <div class="admin-song-info" style="overflow: hidden; display: flex; flex-direction: column; justify-content: center;">
+                    <div style="font-weight: bold; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${s.title}</div>
+                    <div style="color: var(--text-muted); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${s.artist}</div>
+                </div>
+                <div class="admin-song-album" style="color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${s.album}</div>
+                <div class="admin-song-duration" style="color: var(--text-muted);">${s.duration}</div>
+                <div class="admin-song-date" style="color: #535353; font-size: 12px;">${new Date(s.createdAt).toLocaleDateString()}</div>
                 <div style="display: flex; gap: 12px; justify-content: flex-end;">
                     <button class="edit-song-btn" data-song='${JSON.stringify(s)}' style="background: none; border: none; color: var(--spotify-green); cursor: pointer; font-weight: bold;">Edit</button>
                     <button class="delete-song-btn" data-id="${s._id}" style="background: none; border: none; color: #ff4444; cursor: pointer; font-weight: bold;">Delete</button>
