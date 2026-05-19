@@ -1,0 +1,137 @@
+<div class="sales-dashboard-container">
+    <div class="dashboard-header">
+        <h1 class="page-title">Sales Dashboard</h1>
+        <p class="last-updated-text">Last Updated: <span id="lastUpdated"><%= stats.lastUpdated %></span></p>
+    </div>
+
+    <div class="metrics-grid">
+        <div class="metric-card">
+            <div class="metric-icon revenue-icon">
+                <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+            </div>
+            <div class="metric-content">
+                <h3 class="metric-label">Total Revenue</h3>
+                <p class="metric-value">$<span id="totalRevenue"><%= stats.totalRevenue.toFixed(2) %></span></p>
+            </div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-icon orders-icon">
+                <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+            </div>
+            <div class="metric-content">
+                <h3 class="metric-label">Total Orders</h3>
+                <p class="metric-value"><span id="totalOrders"><%= stats.totalOrders %></span></p>
+            </div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-icon product-icon">
+                <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3L2 12h3v8h14v-8h3L12 3zm0 4.84l4.5 4.05V18h-9v-6.11L12 7.84zM10 16h4v-4h2l-4-3.6L8 12h2v4z"/></svg>
+            </div>
+            <div class="metric-content">
+                <h3 class="metric-label">Top Product</h3>
+                <p class="metric-value"><span id="topSellingProduct"><%= stats.topSellingProduct %></span></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .sales-dashboard-container {
+        padding: 24px;
+        color: white;
+    }
+    .dashboard-header {
+        margin-bottom: 32px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+    }
+    .page-title {
+        font-size: 32px;
+        font-weight: 800;
+        margin: 0;
+    }
+    .last-updated-text {
+        color: #b3b3b3;
+        font-size: 14px;
+        margin: 0;
+    }
+    .metrics-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 24px;
+    }
+    .metric-card {
+        background: #181818;
+        padding: 24px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        transition: background 0.3s ease;
+    }
+    .metric-card:hover {
+        background: #282828;
+    }
+    .metric-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 16px;
+    }
+    .revenue-icon { background: rgba(29, 185, 84, 0.1); color: #1db954; }
+    .orders-icon { background: rgba(74, 144, 226, 0.1); color: #4a90e2; }
+    .product-icon { background: rgba(245, 166, 35, 0.1); color: #f5a623; }
+    
+    .metric-label {
+        color: #b3b3b3;
+        font-size: 14px;
+        margin: 0 0 4px 0;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+    }
+    .metric-value {
+        font-size: 24px;
+        font-weight: 700;
+        margin: 0;
+    }
+
+    @media (max-width: 768px) {
+        .dashboard-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+        }
+    }
+</style>
+
+<script>
+    $(document).ready(function() {
+        console.log("Sales Dashboard Ready. Initializing polling...");
+
+        function updateDashboard() {
+            $.ajax({
+                url: '/api/sales-data',
+                method: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    $('#totalRevenue').text(data.totalRevenue.toFixed(2));
+                    $('#totalOrders').text(data.totalOrders);
+                    $('#topSellingProduct').text(data.topSellingProduct);
+                    $('#lastUpdated').text(data.lastUpdated);
+                },
+                error: function(err) {
+                    console.error("Error polling sales data:", err);
+                }
+            });
+        }
+
+        // Poll every 10 seconds
+        setInterval(updateDashboard, 10000);
+    });
+</script>

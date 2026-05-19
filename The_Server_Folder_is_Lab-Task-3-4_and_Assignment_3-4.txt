@@ -1,0 +1,6 @@
+The server folder is:
+        - Lab Task 3
+        - Lab Task 4
+        - Assignment 3
+        - Assignment 4
+

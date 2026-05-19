@@ -1,0 +1,68 @@
+<%- include('partials/header') %>
+
+<div class="search-section">
+    <div class="library-controls">
+        <h2 class="library-title">Music Library</h2>
+
+        <div class="library-filters">
+            <form action="/songs" method="GET" class="library-filters-form">
+                <input type="hidden" name="search" value="<%= search %>">
+                <select name="genre" onchange="this.form.submit()" class="form-select">
+                    <option value="">All Genres</option>
+                    <option value="Pop" <%= genre === 'Pop' ? 'selected' : '' %>>Pop</option>
+                    <option value="Rock" <%= genre === 'Rock' ? 'selected' : '' %>>Rock</option>
+                    <option value="Hip Hop" <%= genre === 'Hip Hop' ? 'selected' : '' %>>Hip Hop</option>
+                    <option value="Jazz" <%= genre === 'Jazz' ? 'selected' : '' %>>Jazz</option>
+                    <option value="Electronic" <%= genre === 'Electronic' ? 'selected' : '' %>>Electronic</option>
+                </select>
+                
+                <select name="sort" onchange="this.form.submit()" class="form-select">
+                    <option value="latest" <%= sort === 'latest' ? 'selected' : '' %>>Latest</option>
+                    <option value="popularity" <%= sort === 'popularity' ? 'selected' : '' %>>Popularity</option>
+                    <option value="alphabetical" <%= sort === 'alphabetical' ? 'selected' : '' %>>Alphabetical</option>
+                </select>
+            </form>
+        </div>
+    </div>
+
+    <div class="song-grid" id="songResultsGrid">
+        <% songs.forEach(song => { %>
+            <div class="song-card">
+                <div class="img-container">
+                    <img src="<%= song.coverUrl || song.albumArt %>" onerror="this.src='/images/Your_Library.svg'">
+                    <div class="card-actions">
+                        <button class="queue-add-btn" title="Add to Queue" data-song='{"id":"<%= song._id %>","title":"<%= song.title %>","artist":"<%= song.artist %>","albumArt":"<%= song.coverUrl || song.albumArt %>","audioUrl":"<%= song.audioUrl %>"}'>
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M18 12V9h-2v3h-3v2h3v3h2v-3h3v-2h-3zM4 10H2v2h2v-2zm0-4H2v2h2V6zm0 8H2v2h2v-2zm10-8H6v2h8V6zm0 4H6v2h8v-2zm0 4H6v2h8v-2z"></path></svg>
+                        </button>
+                        <button class="play-btn" data-song='{"id":"<%= song._id %>","title":"<%= song.title %>","artist":"<%= song.artist %>","albumArt":"<%= song.coverUrl || song.albumArt %>","audioUrl":"<%= song.audioUrl %>"}'>
+                            <svg width="24" height="24" fill="black" viewBox="0 0 24 24"><path d="M7.05 3.606l13.49 7.788a.7.7 0 0 1 0 1.212L7.05 20.394A.7.7 0 0 1 6 19.788V4.212a.7.7 0 0 1 1.05-.606z"></path></svg>
+                        </button>
+                    </div>
+                </div>
+                <h3><%= song.title %></h3>
+                <p><%= song.artist %></p>
+                <div class="song-card-footer">
+                    <span class="song-duration-text"><%= song.duration %></span>
+                    <% if (user) { %>
+                        <button class="add-to-playlist-btn btn-icon-muted" data-song-id="<%= song._id %>">
+                            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 1.75a.75.75 0 0 1 .75.75v5.5h5.5a.75.75 0 0 1 0 1.5h-5.5v5.5a.75.75 0 0 1-1.5 0v-5.5h-5.5a.75.75 0 0 1 0-1.5h5.5v-5.5A.75.75 0 0 1 8 1.75z"></path></svg>
+                        </button>
+                    <% } %>
+                </div>
+            </div>
+        <% }) %>
+    </div>
+
+    <% if (totalPages > 1) { %>
+        <div class="pagination-container">
+            <% for(let i = 1; i <= totalPages; i++) { %>
+                <a href="/songs?page=<%= i %>&genre=<%= genre %>&sort=<%= sort %>&search=<%= search %>" 
+                   class="pagination-link <%= currentPage === i ? 'active' : '' %>">
+                   <%= i %>
+                </a>
+            <% } %>
+        </div>
+    <% } %>
+</div>
+
+<%- include('partials/footer') %>

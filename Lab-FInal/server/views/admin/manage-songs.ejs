@@ -1,0 +1,165 @@
+<%- include('../partials/header') %>
+
+<div class="admin-container">
+    <div class="admin-header-row">
+        <h1 class="admin-header-title">Manage Songs</h1>
+    </div>
+
+    <!-- Upload Song Section -->
+    <div class="admin-section">
+        <h2 class="admin-section-title">Upload New Song</h2>
+        
+        <form id="adminUploadForm" class="admin-form">
+            <!-- Hidden internal fields -->
+            <input type="hidden" name="tempFilePath" id="tempFilePath">
+            <input type="hidden" name="tempArtPath" id="tempArtPath">
+            <input type="hidden" name="duration" id="songDuration">
+
+            <!-- Drag and Drop Area -->
+            <div id="dropArea" class="full-width admin-drop-zone">
+                <div id="dropContent">
+                    <img src="/images/Your_Library.svg" width="48" height="48" class="admin-drop-icon">
+                    <p class="admin-drop-text">Drag and drop audio files here</p>
+                    <p class="admin-drop-subtext">Supports MP3, WAV, FLAC, AAC, OGG, M4A</p>
+                </div>
+                
+                <div id="parsingLoader" class="admin-parsing-loader">
+                    <div class="loader admin-loader-small"></div>
+                    <p class="admin-parsing-text">Analyzing metadata...</p>
+                </div>
+
+                <input type="file" id="audioFileInput" name="audioFile" accept=".mp3,.wav,.flac,.aac,.ogg,.m4a" class="admin-input-hidden">
+                <div id="filePreview" class="admin-file-preview"></div>
+            </div>
+
+            <div>
+                <label class="form-label">Song Title</label>
+                <input type="text" name="title" id="formTitle" required placeholder="Enter song title" class="form-input">
+            </div>
+
+            <div>
+                <label class="form-label">Artist Name</label>
+                <input type="text" name="artist" id="formArtist" required placeholder="Enter artist name" class="form-input">
+            </div>
+
+            <div>
+                <label class="form-label">Album Name</label>
+                <input type="text" name="album" id="formAlbum" placeholder="Enter album name" class="form-input">
+            </div>
+
+            <div class="form-row-2">
+                <div>
+                    <label class="form-label">Genre</label>
+                    <input type="text" name="genre" id="formGenre" placeholder="Pop, Rock, etc." class="form-input">
+                </div>
+                <div>
+                    <label class="form-label">Release Year</label>
+                    <input type="number" name="year" id="formYear" placeholder="2023" class="form-input">
+                </div>
+            </div>
+
+            <div class="cover-upload-row">
+                <div id="coverPreviewContainer" class="admin-cover-preview-box">
+                    <img id="formCoverPreview" src="" class="admin-cover-preview-img">
+                    <span id="coverPlaceholder" class="admin-cover-placeholder">No Cover Art</span>
+                </div>
+                <div class="admin-flex-1">
+                    <label class="form-label">Change Cover Image</label>
+                    <input type="file" id="coverArtInput" name="coverArt" accept="image/*" class="form-input admin-input-padding-small">
+                </div>
+                <div class="track-num-container">
+                    <label class="form-label">Track #</label>
+                    <input type="number" name="trackNumber" id="formTrackNumber" placeholder="1" class="form-input">
+                </div>
+            </div>
+
+            <div class="submit-row">
+                <button type="submit" id="uploadBtn" class="btn-login admin-submit-btn">
+                    <span>Upload Song</span>
+                    <div id="uploadLoader" class="loader admin-loader-tiny"></div>
+                </button>
+                <div id="uploadProgress" class="admin-upload-progress">
+                    <div id="uploadProgressBar" class="admin-upload-bar"></div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Existing Songs Management Section -->
+    <div class="admin-section">
+        <div class="library-mgmt-header">
+            <h2 class="admin-section-title compact">Library Management</h2>
+            <div class="header-actions">
+                <button id="batchDeleteBtn" class="btn-login admin-batch-delete-btn">Delete (<span id="selectedCount">0</span>)</button>
+                <button id="toggleSelectBtn" class="admin-select-toggle-btn">Select</button>
+                <button id="refreshLibraryBtn" class="admin-refresh-btn">Refresh List</button>
+            </div>
+        </div>
+        
+        <div id="adminSongList" class="admin-song-list">
+            <p class="admin-empty-list-text">Loading songs...</p>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Song Modal -->
+<div class="modal-overlay" id="editSongModal">
+    <div class="modal-content admin-modal-edit">
+        <h3 class="modal-title-alt admin-modal-title-spaced">Edit Song Details</h3>
+        <form id="editSongForm" class="admin-modal-form">
+            <input type="hidden" name="id" id="editSongId">
+            <div class="admin-modal-avatar-row">
+                <img id="editCoverPreview" src="" class="admin-modal-avatar-img">
+                <div class="admin-flex-1">
+                    <label class="form-label admin-modal-label-small">UPDATE COVER</label>
+                    <input type="file" name="coverArt" accept="image/*" class="form-help-text admin-flex-1">
+                </div>
+            </div>
+            <div>
+                <label class="form-label">TITLE</label>
+                <input type="text" name="title" id="editTitle" required class="form-input admin-input-dark-bg">
+            </div>
+            <div>
+                <label class="form-label">ARTIST</label>
+                <input type="text" name="artist" id="editArtist" required class="form-input admin-input-dark-bg">
+            </div>
+            <div>
+                <label class="form-label">ALBUM</label>
+                <input type="text" name="album" id="editAlbum" class="form-input admin-input-dark-bg">
+            </div>
+            <div class="form-row-2">
+                <div>
+                    <label class="form-label">GENRE</label>
+                    <input type="text" name="genre" id="editGenre" class="form-input admin-input-dark-bg">
+                </div>
+                <div>
+                    <label class="form-label">YEAR</label>
+                    <input type="number" name="year" id="editYear" class="form-input admin-input-dark-bg">
+                </div>
+            </div>
+            <div class="admin-modal-actions-row">
+                <button type="submit" class="btn-login admin-btn-min-width">Save Changes</button>
+                <button type="button" onclick="document.getElementById('editSongModal').style.display='none'" 
+                        class="modal-cancel-btn admin-btn-min-width">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal-overlay" id="deleteSongModal">
+    <div class="modal-content admin-modal-delete">
+        <h3 class="modal-title-alt admin-danger-title">Delete Song?</h3>
+        <p class="auth-modal-text">This action cannot be undone. The song will be permanently removed from the library and Cloudinary.</p>
+        <div class="admin-modal-actions-row">
+            <button id="confirmDeleteBtn" class="btn-login admin-batch-delete-btn admin-btn-min-width admin-modal-form">
+                <span>Delete</span>
+                <div id="deleteLoader" class="loader admin-loader-tiny"></div>
+            </button>
+            <button id="cancelDeleteBtn" onclick="document.getElementById('deleteSongModal').style.display='none'" 
+                    class="modal-cancel-btn admin-btn-min-width">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<%- include('../partials/footer') %>
