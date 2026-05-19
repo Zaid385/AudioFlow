@@ -5,7 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AudioFlow - <%= title %></title>
     <link rel="icon" type="image/icon" href="/images/AudioFLow_icon_green.svg">
-    <link rel="stylesheet" href="/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- CSS Architecture -->
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/layout.css">
+    <link rel="stylesheet" href="/css/components/buttons.css">
+    <link rel="stylesheet" href="/css/components/forms.css">
+    <link rel="stylesheet" href="/css/components/cards.css">
+    <link rel="stylesheet" href="/css/components/modals.css">
+    <link rel="stylesheet" href="/css/components/tables.css">
+    <link rel="stylesheet" href="/css/components/navbar.css">
+    <link rel="stylesheet" href="/css/pages/player.css">
+    <link rel="stylesheet" href="/css/pages/admin.css">
+    <link rel="stylesheet" href="/css/pages/playlists.css">
+    <link rel="stylesheet" href="/css/pages/profile.css">
+    <link rel="stylesheet" href="/css/pages/auth.css">
     <script src="https://unpkg.com/fast-average-color/dist/index.browser.min.js"></script>
 </head>
 <body>
@@ -36,32 +52,32 @@
                     Search
                 </a>
                 <% if (user && user.role === 'admin') { %>
-                    <a href="/admin/manage-songs" class="<%= title === 'Manage Songs' ? 'active' : '' %>" style="color: var(--spotify-green);">
-                        <img src="/images/Your_Library.svg" width="24" height="24" style="filter: hue-rotate(90deg);">
+                    <a href="/admin/manage-songs" class="<%= title === 'Manage Songs' ? 'active' : '' %> admin-nav-link">
+                        <img src="/images/Your_Library.svg" width="24" height="24" class="admin-nav-icon">
                         Manage Songs
                     </a>
                 <% } %>
             </nav>
 
             <div class="sidebar-library">
-                <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <a href="/playlists" style="display: flex; align-items: center; gap: 12px; color: var(--text-muted); font-weight: bold; text-decoration: none; transition: color 0.2s;">
+                <header class="library-header">
+                    <a href="/playlists" class="library-link">
                         <img src="/images/Your_Library.svg" width="24" height="24">
                         Your Library
                     </a>
                     <% if (user) { %>
-                        <div id="createPlaylistBtn" style="color: var(--text-muted); font-size: 24px; cursor: pointer; transition: color 0.2s;">+</div>
+                        <div id="createPlaylistBtn" class="add-playlist-btn">+</div>
                     <% } %>
                 </header>
 
-                <div id="playlistList" style="flex: 1; display: flex; flex-direction: column; gap: 4px; overflow-y: auto;">
+                <div id="playlistList" class="playlist-list">
                     <% if (user) { %>
-                        <p id="playlistPlaceholder" style="color: var(--text-muted); font-size: 14px; padding: 10px;">Your playlists will appear here.</p>
+                        <p id="playlistPlaceholder" class="playlist-placeholder">Your playlists will appear here.</p>
                     <% } else { %>
-                        <div style="background: #242424; padding: 16px; border-radius: 8px; margin-top: 10px;">
-                            <p style="font-weight: bold; margin-bottom: 8px;">Create your first playlist</p>
-                            <p style="font-size: 14px; margin-bottom: 20px;">It's easy, we'll help you</p>
-                            <a href="/login" class="btn-login" style="display: inline-block; font-size: 14px; padding: 8px 16px;">Log in</a>
+                        <div class="empty-library-card">
+                            <p class="empty-library-title">Create your first playlist</p>
+                            <p class="empty-library-subtitle">It's easy, we'll help you</p>
+                            <a href="/login" class="btn-login empty-library-btn">Log in</a>
                         </div>
                     <% } %>
                 </div>
@@ -71,8 +87,10 @@
         <!-- Main View -->
         <main class="main-view">
             <header class="top-bar">
-                <div class="nav-left-spacer mobile-only-header">
-                    <img src="/images/AudioFLow_icon_white.svg" height="32" width="32" alt="Logo">
+                <div class="nav-left-spacer">
+                    <div class="mobile-only-header">
+                        <img src="/images/AudioFLow_icon_white.svg" height="32" width="32" alt="Logo">
+                    </div>
                 </div>
 
                 <div class="nav-center">
@@ -80,22 +98,22 @@
                         <img src="/images/Search.svg" alt="search">
                         <input type="text" name="search" placeholder="What do you want to play?" value="<%= typeof search !== 'undefined' ? search : '' %>" autocomplete="off">
                     </form>
-                    <div id="searchSuggestions" style="position: absolute; top: 110%; left: 0; right: 0; background: #282828; border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); z-index: 200; display: none; overflow: hidden;">
+                    <div id="searchSuggestions" class="search-suggestions-box">
                         <!-- Suggestions populated via JS -->
                     </div>
                 </div>
 
                 <div class="auth-actions desktop-only">
                     <% if (user) { %>
-                        <div style="display: flex; align-items: center; gap: 16px;">
+                        <div class="user-profile-actions">
                             <% if (user.role === 'admin') { %>
-                                <a href="/admin/manage-songs" style="color: var(--spotify-green); text-decoration: none; font-weight: bold; font-size: 14px;">Manage Songs</a>
+                                <a href="/admin/manage-songs" class="admin-manage-link">Manage Songs</a>
                             <% } %>
-                            <a href="/profile" class="profile-pill" style="text-decoration: none; color: white;">
-                                <div style="width: 28px; height: 28px; background: #535353; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+                            <a href="/profile" class="profile-pill profile-pill-link">
+                                <div class="profile-avatar-small">
                                     <%= user.name.charAt(0).toUpperCase() %>
                                 </div>
-                                <span style="font-size: 14px; font-weight: bold;"><%= user.name %></span>
+                                <span class="profile-name-small"><%= user.name %></span>
                             </a>
                         </div>
                     <% } else { %>
@@ -105,7 +123,7 @@
                 </div>
                 
                 <div class="mobile-hamburger mobile-only">
-                    <button id="mobileMenuBtn" style="background: none; border: none; color: white; cursor: pointer;">
+                    <button id="mobileMenuBtn" class="mobile-menu-btn">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"></path></svg>
                     </button>
                 </div>
@@ -114,12 +132,12 @@
             <!-- Mobile Hamburger Menu Overlay -->
             <div id="mobileMenuOverlay" class="mobile-menu-overlay">
                 <div class="mobile-menu-content">
-                    <button id="closeMobileMenuBtn" style="background: none; border: none; color: white; cursor: pointer; align-self: flex-end; margin-bottom: 24px;">
+                    <button id="closeMobileMenuBtn" class="close-menu-btn">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"></path></svg>
                     </button>
                     <% if (user) { %>
                         <a href="/profile" class="mobile-menu-link">
-                            <div style="width: 40px; height: 40px; background: #535353; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px;">
+                            <div class="profile-avatar-medium">
                                 <%= user.name.charAt(0).toUpperCase() %>
                             </div>
                             <span>Profile</span>

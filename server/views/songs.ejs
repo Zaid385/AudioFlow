@@ -1,13 +1,13 @@
 <%- include('partials/header') %>
 
 <div class="search-section">
-    <div style="margin-bottom: 32px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
-        <h2 style="font-size: 24px; font-weight: bold; flex: 1;">Music Library</h2>
+    <div class="library-controls">
+        <h2 class="library-title">Music Library</h2>
 
-        <div style="display: flex; gap: 12px;">
-            <form action="/songs" method="GET" style="display: flex; gap: 12px;">
+        <div class="library-filters">
+            <form action="/songs" method="GET" class="library-filters-form">
                 <input type="hidden" name="search" value="<%= search %>">
-                <select name="genre" onchange="this.form.submit()" style="padding: 8px 16px; border-radius: 4px; background: #282828; color: white; border: 1px solid #333; outline: none;">
+                <select name="genre" onchange="this.form.submit()" class="form-select">
                     <option value="">All Genres</option>
                     <option value="Pop" <%= genre === 'Pop' ? 'selected' : '' %>>Pop</option>
                     <option value="Rock" <%= genre === 'Rock' ? 'selected' : '' %>>Rock</option>
@@ -16,7 +16,7 @@
                     <option value="Electronic" <%= genre === 'Electronic' ? 'selected' : '' %>>Electronic</option>
                 </select>
                 
-                <select name="sort" onchange="this.form.submit()" style="padding: 8px 16px; border-radius: 4px; background: #282828; color: white; border: 1px solid #333; outline: none;">
+                <select name="sort" onchange="this.form.submit()" class="form-select">
                     <option value="latest" <%= sort === 'latest' ? 'selected' : '' %>>Latest</option>
                     <option value="popularity" <%= sort === 'popularity' ? 'selected' : '' %>>Popularity</option>
                     <option value="alphabetical" <%= sort === 'alphabetical' ? 'selected' : '' %>>Alphabetical</option>
@@ -41,10 +41,10 @@
                 </div>
                 <h3><%= song.title %></h3>
                 <p><%= song.artist %></p>
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px;">
-                    <span style="font-size: 12px; color: var(--text-muted);"><%= song.duration %></span>
+                <div class="song-card-footer">
+                    <span class="song-duration-text"><%= song.duration %></span>
                     <% if (user) { %>
-                        <button class="add-to-playlist-btn" data-song-id="<%= song._id %>" style="background: none; border: none; color: var(--text-muted); cursor: pointer;">
+                        <button class="add-to-playlist-btn btn-icon-muted" data-song-id="<%= song._id %>">
                             <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 1.75a.75.75 0 0 1 .75.75v5.5h5.5a.75.75 0 0 1 0 1.5h-5.5v5.5a.75.75 0 0 1-1.5 0v-5.5h-5.5a.75.75 0 0 1 0-1.5h5.5v-5.5A.75.75 0 0 1 8 1.75z"></path></svg>
                         </button>
                     <% } %>
@@ -54,10 +54,10 @@
     </div>
 
     <% if (totalPages > 1) { %>
-        <div style="margin-top: 48px; display: flex; justify-content: center; gap: 8px;">
+        <div class="pagination-container">
             <% for(let i = 1; i <= totalPages; i++) { %>
                 <a href="/songs?page=<%= i %>&genre=<%= genre %>&sort=<%= sort %>&search=<%= search %>" 
-                   style="padding: 8px 16px; background: <%= currentPage === i ? 'white' : '#282828' %>; color: <%= currentPage === i ? 'black' : 'white' %>; text-decoration: none; border-radius: 4px; font-weight: bold; font-size: 14px;">
+                   class="pagination-link <%= currentPage === i ? 'active' : '' %>">
                    <%= i %>
                 </a>
             <% } %>

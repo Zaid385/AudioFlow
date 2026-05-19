@@ -1,0 +1,143 @@
+/* Layout Grid */
+.app-container {
+    display: grid;
+    grid-template-areas: 
+        "sidebar main"
+        "player player";
+    grid-template-columns: var(--sidebar-width) 1fr;
+    grid-template-rows: 1fr var(--player-height);
+    height: 100vh;
+    width: 100vw;
+    gap: 8px;
+    padding: 8px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Three-column layout when right panel is active */
+.app-container.has-right-panel {
+    grid-template-areas: 
+        "sidebar main right"
+        "player player player";
+    grid-template-columns: var(--sidebar-width) 1fr var(--right-panel-width);
+}
+
+.app-container.user-logged-out {
+    grid-template-areas: 
+        "sidebar main"
+        "player player";
+    grid-template-columns: var(--sidebar-width) 1fr;
+}
+
+/* Resize Handles */
+.resize-handle {
+    position: absolute;
+    width: 4px;
+    top: 8px;
+    bottom: calc(var(--player-height) + 16px);
+    cursor: col-resize;
+    z-index: 1000;
+    transition: background-color 0.2s;
+}
+
+.resize-handle:hover {
+    background-color: hsla(0,0%,100%,.3);
+}
+
+.resize-handle-left {
+    left: calc(var(--sidebar-width) + 6px);
+}
+
+.resize-handle-right {
+    right: calc(var(--right-panel-width) + 6px);
+    display: none; /* Only show when panel is active */
+}
+
+.has-right-panel .resize-handle-right {
+    display: block;
+}
+
+/* Main View */
+.main-view {
+    grid-area: main;
+    background-color: var(--bg-main);
+    border-radius: 8px;
+    overflow-y: auto;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.main-content {
+    padding: 24px 32px;
+    flex: 1;
+}
+
+/* Sections */
+.section-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px; }
+.section-title { font-size: 24px; font-weight: bold; margin: 0; }
+.section-title-spaced { margin-bottom: 24px; }
+.section-link { color: var(--text-muted); font-size: 14px; font-weight: bold; text-decoration: none; }
+.section-link:hover { color: white; text-decoration: underline; }
+.section-spaced { margin-top: 48px; }
+
+.library-controls { margin-bottom: 32px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+.library-title { font-size: 24px; font-weight: bold; flex: 1; }
+.library-filters { display: flex; gap: 12px; }
+
+.pagination-container { margin-top: 48px; display: flex; justify-content: center; gap: 8px; }
+.pagination-link {
+    padding: 8px 16px; background: #282828; color: white;
+    text-decoration: none; border-radius: 4px; font-weight: bold; font-size: 14px;
+    transition: background 0.2s;
+}
+.pagination-link:hover { background: #3e3e3e; }
+.pagination-link.active { background: white; color: black; }
+
+/* Playlists Overview Page */
+.playlists-container { padding: 40px; }
+.playlists-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; gap: 16px; }
+.playlists-header-title { font-size: 32px; font-weight: 800; margin: 0; }
+
+/* Error Pages */
+.error-page-container { text-align: center; margin-top: 100px; }
+.error-code { font-size: 5em; color: var(--spotify-green); margin-bottom: 16px; }
+.error-text { color: var(--text-muted); margin-top: 20px; margin-bottom: 32px; }
+
+@media (max-width: 1100px) {
+    .app-container, .app-container.has-right-panel {
+        grid-template-areas: 
+            "sidebar main"
+            "player player";
+        grid-template-columns: var(--sidebar-width) 1fr;
+    }
+    .resize-handle-right { display: none !important; }
+}
+
+@media (max-width: 768px) {
+    .app-container, .app-container.has-right-panel {
+        display: block;
+        height: 100vh;
+        width: 100vw;
+        padding: 0;
+        overflow: hidden;
+    }
+    
+    .main-view {
+        height: 100vh;
+        border-radius: 0;
+        padding-bottom: 154px; /* Player (90) + Nav (64) */
+    }
+
+    .main-content {
+        padding: 16px;
+    }
+
+    .resize-handle { display: none; }
+
+    /* Playlists Overview Mobile */
+    .playlists-container { padding: 24px 16px !important; }
+    .playlists-header-row { flex-direction: row !important; align-items: center !important; justify-content: space-between !important; margin-bottom: 24px !important; gap: 12px !important; }
+    .playlists-header-title { font-size: 24px !important; }
+}

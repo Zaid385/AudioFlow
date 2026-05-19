@@ -1,20 +1,20 @@
 <%- include('../partials/header') %>
 
-<div style="max-width: 600px; margin: 30px auto; padding: 20px; background: #121212; border-radius: 8px;">
+<div class="admin-form-card">
     <h2>Add New Song</h2>
     
-    <form action="/admin/songs/add" method="POST" enctype="multipart/form-data" style="margin-top: 20px;">
-        <div style="margin-bottom: 15px;">
-            <label style="display: block; margin-bottom: 5px;">Song Title</label>
-            <input type="text" name="title" required style="width: 100%; padding: 10px; border-radius: 4px; border: 1px solid #333; background: #282828; color: white;">
+    <form action="/admin/songs/add" method="POST" enctype="multipart/form-data" class="admin-form-box">
+        <div class="form-group">
+            <label class="form-label">Song Title</label>
+            <input type="text" name="title" required class="form-input">
         </div>
-        <div style="margin-bottom: 15px;">
-            <label style="display: block; margin-bottom: 5px;">Artist</label>
-            <input type="text" name="artist" required style="width: 100%; padding: 10px; border-radius: 4px; border: 1px solid #333; background: #282828; color: white;">
+        <div class="form-group">
+            <label class="form-label">Artist</label>
+            <input type="text" name="artist" required class="form-input">
         </div>
-        <div style="margin-bottom: 15px;">
-            <label style="display: block; margin-bottom: 5px;">Genre</label>
-            <select name="genre" required style="width: 100%; padding: 10px; border-radius: 4px; border: 1px solid #333; background: #282828; color: white;">
+        <div class="form-group">
+            <label class="form-label">Genre</label>
+            <select name="genre" required class="form-select form-select-full">
                 <option value="Pop">Pop</option>
                 <option value="Rock">Rock</option>
                 <option value="Hip Hop">Hip Hop</option>
@@ -22,22 +22,22 @@
                 <option value="Electronic">Electronic</option>
             </select>
         </div>
-        <div style="margin-bottom: 15px;">
-            <label style="display: block; margin-bottom: 5px;">Duration (M:SS)</label>
-            <input type="text" name="duration" placeholder="3:45" required style="width: 100%; padding: 10px; border-radius: 4px; border: 1px solid #333; background: #282828; color: white;">
+        <div class="form-group">
+            <label class="form-label">Duration (M:SS)</label>
+            <input type="text" name="duration" placeholder="3:45" required class="form-input">
         </div>
-        <div style="margin-bottom: 15px;">
-            <label style="display: block; margin-bottom: 5px;">Album Art (Image)</label>
-            <input type="file" name="albumArt" accept="image/*" required style="width: 100%; padding: 10px; border-radius: 4px; border: 1px solid #333; background: #282828; color: white;">
+        <div class="form-group">
+            <label class="form-label">Album Art (Image)</label>
+            <input type="file" name="albumArt" accept="image/*" required class="form-input">
         </div>
-        <div style="margin-bottom: 20px;">
-            <label style="display: block; margin-bottom: 5px;">Audio File</label>
-            <input type="file" name="audioFile" accept="audio/*" required style="width: 100%; padding: 10px; border-radius: 4px; border: 1px solid #333; background: #282828; color: white;">
+        <div class="form-group-large">
+            <label class="form-label">Audio File</label>
+            <input type="file" name="audioFile" accept="audio/*" required class="form-input">
         </div>
         
-        <div style="display: flex; gap: 10px;">
-            <button type="submit" class="loginButton" style="flex: 1; padding: 12px; font-weight: bold; cursor: pointer;">Add Song</button>
-            <a href="/admin/dashboard" style="flex: 1; padding: 12px; text-align: center; background: #282828; color: white; border-radius: 20px; text-decoration: none;">Cancel</a>
+        <div class="form-actions-row">
+            <button type="submit" class="loginButton btn-auth-full">Add Song</button>
+            <a href="/admin/dashboard" class="btn-secondary-pill">Cancel</a>
         </div>
     </form>
 </div>

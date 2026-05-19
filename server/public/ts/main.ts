@@ -270,18 +270,26 @@ class AudioPlayer {
             }
         });
         
+        const minimize = () => {
+            if (!playerContainer?.classList.contains('fullscreen')) return;
+            playerContainer.classList.add('minimizing');
+            playerContainer.classList.remove('fullscreen');
+            setTimeout(() => playerContainer.classList.remove('minimizing'), 400);
+        };
+
         minimizePlayerBtn?.addEventListener('click', (e) => {
             e.stopPropagation();
-            playerContainer?.classList.remove('fullscreen');
+            minimize();
         });
 
-        // Swipe down to minimize
+        // Swipe down to minimize (only if scrolled to top)
         let touchStartY = 0;
         playerContainer?.addEventListener('touchstart', e => { touchStartY = e.touches[0].clientY; }, {passive: true});
         playerContainer?.addEventListener('touchend', e => {
             const touchEndY = e.changedTouches[0].clientY;
-            if (touchEndY - touchStartY > 50 && playerContainer.classList.contains('fullscreen')) {
-                playerContainer.classList.remove('fullscreen');
+            const deltaY = touchEndY - touchStartY;
+            if (deltaY > 70 && playerContainer.classList.contains('fullscreen') && playerContainer.scrollTop === 0) {
+                minimize();
             }
         });
 
@@ -299,22 +307,47 @@ class AudioPlayer {
         this.audio.addEventListener('ended', () => this.playNextInQueue());
         this.audio.addEventListener('error', () => this.showToast('Audio playback failed'));
         
-        progressBarContainer?.addEventListener('click', (e) => this.seek(e));
-        
-        let isDraggingVolume = false;
-        const setVol = (e: MouseEvent) => {
-            const rect = volumeBarContainer!.getBoundingClientRect();
-            const vol = (e.clientX - rect.left) / rect.width;
-            this.volume = Math.max(0, Math.min(1, vol));
-            this.audio.volume = this.volume;
-            const bar = document.getElementById('volumeBar');
-            if (bar) bar.style.width = `${this.volume * 100}%`;
-            this.saveState();
+        // Unified Slider Logic (Draggable & Tappable)
+        const setupSlider = (container: HTMLElement, updateFn: (percent: number) => void) => {
+            let isDragging = false;
+            
+            const handleMove = (clientX: number) => {
+                const rect = container.getBoundingClientRect();
+                const percent = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+                updateFn(percent);
+            };
+
+            container.addEventListener('mousedown', (e) => { isDragging = true; handleMove(e.clientX); });
+            container.addEventListener('touchstart', (e) => { isDragging = true; handleMove(e.touches[0].clientX); }, {passive: true});
+            
+            document.addEventListener('mousemove', (e) => { if (isDragging) handleMove(e.clientX); });
+            document.addEventListener('touchmove', (e) => { if (isDragging) handleMove(e.touches[0].clientX); }, {passive: false});
+            
+            document.addEventListener('mouseup', () => { isDragging = false; });
+            document.addEventListener('touchend', () => { isDragging = false; });
+            
+            // Allow tap to seek as well (handled by mousedown/touchstart but explicit click is safer for some browsers)
+            container.addEventListener('click', (e) => handleMove(e.clientX));
         };
 
-        volumeBarContainer?.addEventListener('mousedown', (e) => { isDraggingVolume = true; setVol(e); });
-        document.addEventListener('mousemove', (e) => { if (isDraggingVolume) setVol(e); });
-        document.addEventListener('mouseup', () => { isDraggingVolume = false; });
+        if (progressBarContainer) {
+            setupSlider(progressBarContainer, (percent) => {
+                if (this.audio.duration) {
+                    this.audio.currentTime = percent * this.audio.duration;
+                    this.updateProgress();
+                }
+            });
+        }
+
+        if (volumeBarContainer) {
+            setupSlider(volumeBarContainer, (percent) => {
+                this.volume = percent;
+                this.audio.volume = this.volume;
+                const bar = document.getElementById('volumeBar');
+                if (bar) bar.style.width = `${this.volume * 100}%`;
+                this.saveState();
+            });
+        }
 
         document.addEventListener('click', (e) => {
             const target = e.target as HTMLElement;
@@ -787,6 +820,7 @@ class AudioPlayer {
         `;
 
         if (details) {
+            document.querySelector('.app-container')?.classList.add('has-right-panel');
             document.getElementById('rightPanel')!.classList.add('active');
             details.innerHTML = `
                 <div class="now-playing-card">

@@ -1,22 +1,22 @@
 <%- include('partials/header') %>
 
-<div style="max-width: 400px; margin: 50px auto; padding: 20px; background: #121212; border-radius: 8px;">
-    <h2 style="text-align: center; margin-bottom: 20px;">Login to AudioFlow</h2>
+<div class="auth-card">
+    <h2 class="auth-title">Login to AudioFlow</h2>
     
     <form action="/login" method="POST">
-        <div style="margin-bottom: 15px;">
-            <label style="display: block; margin-bottom: 5px;">Email</label>
-            <input type="email" name="email" required style="width: 100%; padding: 10px; border-radius: 4px; border: 1px solid #333; background: #282828; color: white;">
+        <div class="form-group">
+            <label class="form-label">Email</label>
+            <input type="email" name="email" required class="form-input">
         </div>
-        <div style="margin-bottom: 20px;">
-            <label style="display: block; margin-bottom: 5px;">Password</label>
-            <input type="password" name="password" required style="width: 100%; padding: 10px; border-radius: 4px; border: 1px solid #333; background: #282828; color: white;">
+        <div class="form-group-large">
+            <label class="form-label">Password</label>
+            <input type="password" name="password" required class="form-input">
         </div>
-        <button type="submit" class="loginButton" style="width: 100%; padding: 12px; font-weight: bold; cursor: pointer;">Log In</button>
+        <button type="submit" class="loginButton btn-auth-full">Log In</button>
     </form>
     
-    <p style="text-align: center; margin-top: 15px; color: #b3b3b3;">
-        Don't have an account? <a href="/register" style="color: white;">Sign up</a>
+    <p class="auth-footer-text">
+        Don't have an account? <a href="/register" class="auth-footer-link">Sign up</a>
     </p>
 </div>
 

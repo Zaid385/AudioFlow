@@ -233,17 +233,25 @@ class AudioPlayer {
                 playerContainer.classList.add('fullscreen');
             }
         });
+        const minimize = () => {
+            if (!(playerContainer === null || playerContainer === void 0 ? void 0 : playerContainer.classList.contains('fullscreen')))
+                return;
+            playerContainer.classList.add('minimizing');
+            playerContainer.classList.remove('fullscreen');
+            setTimeout(() => playerContainer.classList.remove('minimizing'), 400);
+        };
         minimizePlayerBtn === null || minimizePlayerBtn === void 0 ? void 0 : minimizePlayerBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            playerContainer === null || playerContainer === void 0 ? void 0 : playerContainer.classList.remove('fullscreen');
+            minimize();
         });
-        // Swipe down to minimize
+        // Swipe down to minimize (only if scrolled to top)
         let touchStartY = 0;
         playerContainer === null || playerContainer === void 0 ? void 0 : playerContainer.addEventListener('touchstart', e => { touchStartY = e.touches[0].clientY; }, { passive: true });
         playerContainer === null || playerContainer === void 0 ? void 0 : playerContainer.addEventListener('touchend', e => {
             const touchEndY = e.changedTouches[0].clientY;
-            if (touchEndY - touchStartY > 50 && playerContainer.classList.contains('fullscreen')) {
-                playerContainer.classList.remove('fullscreen');
+            const deltaY = touchEndY - touchStartY;
+            if (deltaY > 70 && playerContainer.classList.contains('fullscreen') && playerContainer.scrollTop === 0) {
+                minimize();
             }
         });
         playPauseBtn === null || playPauseBtn === void 0 ? void 0 : playPauseBtn.addEventListener('click', () => this.togglePlay());
@@ -257,22 +265,43 @@ class AudioPlayer {
         this.audio.addEventListener('pause', () => { this.isPlaying = false; this.updateUI(); this.stopVisualizer(); });
         this.audio.addEventListener('ended', () => this.playNextInQueue());
         this.audio.addEventListener('error', () => this.showToast('Audio playback failed'));
-        progressBarContainer === null || progressBarContainer === void 0 ? void 0 : progressBarContainer.addEventListener('click', (e) => this.seek(e));
-        let isDraggingVolume = false;
-        const setVol = (e) => {
-            const rect = volumeBarContainer.getBoundingClientRect();
-            const vol = (e.clientX - rect.left) / rect.width;
-            this.volume = Math.max(0, Math.min(1, vol));
-            this.audio.volume = this.volume;
-            const bar = document.getElementById('volumeBar');
-            if (bar)
-                bar.style.width = `${this.volume * 100}%`;
-            this.saveState();
+        // Unified Slider Logic (Draggable & Tappable)
+        const setupSlider = (container, updateFn) => {
+            let isDragging = false;
+            const handleMove = (clientX) => {
+                const rect = container.getBoundingClientRect();
+                const percent = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+                updateFn(percent);
+            };
+            container.addEventListener('mousedown', (e) => { isDragging = true; handleMove(e.clientX); });
+            container.addEventListener('touchstart', (e) => { isDragging = true; handleMove(e.touches[0].clientX); }, { passive: true });
+            document.addEventListener('mousemove', (e) => { if (isDragging)
+                handleMove(e.clientX); });
+            document.addEventListener('touchmove', (e) => { if (isDragging)
+                handleMove(e.touches[0].clientX); }, { passive: false });
+            document.addEventListener('mouseup', () => { isDragging = false; });
+            document.addEventListener('touchend', () => { isDragging = false; });
+            // Allow tap to seek as well (handled by mousedown/touchstart but explicit click is safer for some browsers)
+            container.addEventListener('click', (e) => handleMove(e.clientX));
         };
-        volumeBarContainer === null || volumeBarContainer === void 0 ? void 0 : volumeBarContainer.addEventListener('mousedown', (e) => { isDraggingVolume = true; setVol(e); });
-        document.addEventListener('mousemove', (e) => { if (isDraggingVolume)
-            setVol(e); });
-        document.addEventListener('mouseup', () => { isDraggingVolume = false; });
+        if (progressBarContainer) {
+            setupSlider(progressBarContainer, (percent) => {
+                if (this.audio.duration) {
+                    this.audio.currentTime = percent * this.audio.duration;
+                    this.updateProgress();
+                }
+            });
+        }
+        if (volumeBarContainer) {
+            setupSlider(volumeBarContainer, (percent) => {
+                this.volume = percent;
+                this.audio.volume = this.volume;
+                const bar = document.getElementById('volumeBar');
+                if (bar)
+                    bar.style.width = `${this.volume * 100}%`;
+                this.saveState();
+            });
+        }
         document.addEventListener('click', (e) => {
             const target = e.target;
             const queueAddBtn = target.closest('.queue-add-btn');
@@ -741,7 +770,7 @@ class AudioPlayer {
     stopVisualizer() { if (this.animationId)
         cancelAnimationFrame(this.animationId); }
     updateUI() {
-        var _a;
+        var _a, _b;
         if (!this.currentTrack)
             return;
         document.getElementById('playerTrackTitle').textContent = this.currentTrack.title;
@@ -788,6 +817,7 @@ class AudioPlayer {
             </div>
         `;
         if (details) {
+            (_a = document.querySelector('.app-container')) === null || _a === void 0 ? void 0 : _a.classList.add('has-right-panel');
             document.getElementById('rightPanel').classList.add('active');
             details.innerHTML = `
                 <div class="now-playing-card">
@@ -804,7 +834,7 @@ class AudioPlayer {
                     ${detailsHtml}
                 </div>
             `;
-            (_a = document.getElementById('sidebarHeartBtn')) === null || _a === void 0 ? void 0 : _a.addEventListener('click', () => this.handleHeartClick());
+            (_b = document.getElementById('sidebarHeartBtn')) === null || _b === void 0 ? void 0 : _b.addEventListener('click', () => this.handleHeartClick());
         }
         if (mobileDetails) {
             mobileDetails.innerHTML = detailsHtml;

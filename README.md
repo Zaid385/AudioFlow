@@ -1,84 +1,120 @@
-# AudioFlow - Spotify Clone (Backend)
+# 🎵 AudioFlow - High-Fidelity Music Streaming Platform
 
-This is a robust backend for the AudioFlow music streaming platform, adapted from e-commerce requirements into a music-focused MVC architecture.
+### 🚀 [Live Demo: https://audioflow-production.up.railway.app/](https://audioflow-production.up.railway.app/)
 
-## Features
-- **MVC Architecture:** Organized into Models, Controllers, and Routes.
-- **Dynamic Music Library:** Server-side pagination, genre filtering, search, and sorting.
-- **User Authentication:** 
-  - Session-based auth for the Web UI (EJS).
-  - JWT-based auth for the Headless REST API.
-- **Admin Dashboard:** Full CRUD operations for songs (Admin only).
-- **Playlist System:** Users can create and manage their own song collections.
-- **Media Uploads:** Integrated Multer for album art and audio file uploads.
-- **REST API:** Fully functional JSON API under `/api/v1`.
-- **Validation:** Strict request validation using Zod.
-- **Error Handling:** Centralized async error management.
+AudioFlow is a premium, feature-rich Spotify clone built with a modern **Express/TypeScript** backend and a high-performance **Vanilla TypeScript** frontend. It features true audio persistence, a sleek dark-themed UI, robust admin controls, and seamless cloud integration.
 
-## Prerequisites
-- Node.js (v18+)
-- MongoDB (Local or Atlas)
-- TypeScript
+---
 
-## Installation
+## ✨ Key Features
 
-1. Navigate to the server directory:
-   ```bash
-   cd server
-   ```
+### 🎧 Superior Playback Experience
+- **SPA-Lite Navigation:** Seamless page transitions using a custom AJAX/DOM-Parser system that ensures music never stops when you switch pages.
+- **Advanced Manual Queue:** Add any song to your queue, reorder them, and see what's coming up next in the real-time "Now Playing" panel.
+- **Dynamic Visualizer:** Real-time Web Audio API frequency visualizer integrated into the player.
+- **Adaptive UI Background:** The app's background glow dynamically changes color to match the album art of the currently playing track.
 
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
+### 📱 Responsive & Mobile-First
+- **Fluid Fullscreen Player:** On mobile, the player minimizes to a compact bar and fluidly expands into a rich fullscreen view with smooth animations and touch gestures (swipe down to minimize).
+- **Mobile Bottom Nav:** Intuitive bottom navigation for quick access to Home, Search, and Library on small screens.
+- **Resizable Panels:** (Desktop) Fully adjustable sidebar and right panel with draggable handles.
 
-3. Set up environment variables:
-   Create a `.env` file in the `server` directory:
-   ```env
-   PORT=3000
-   MONGODB_URI=mongodb://localhost:27017/audioflow
-   SESSION_SECRET=your_secret_key
-   JWT_SECRET=your_jwt_secret
-   NODE_ENV=development
-   ```
+### 🔐 Robust Admin & Data Management
+- **Cloudinary Integration:** Audio files and album art are stored securely in the cloud, optimized for fast streaming.
+- **Automatic Metadata Extraction:** Admin dashboard automatically parses uploaded `.mp3` files to extract Title, Artist, Album, and embedded Cover Art using `music-metadata`.
+- **Batch Operations:** Select and delete multiple songs at once with real-time UI progress tracking.
 
-## Running the Application
+### 📂 User Personalization
+- **Playlist System:** Create, manage, and delete custom playlists.
+- **Liked Songs:** Dedicated smart playlist for all your hearted tracks.
+- **Dynamic Grid Covers:** Automatic 2x2 cover art generation for playlists based on their contents.
 
-### 1. Seed the Database
-Ensure MongoDB is running, then execute:
-```bash
-npm run seed
+---
+
+## 🛠️ Tech Stack
+
+- **Backend:** Node.js, Express, TypeScript, EJS (Embedded JavaScript)
+- **Frontend:** Vanilla TypeScript, CSS Grid/Flexbox (No heavy frameworks)
+- **Database:** MongoDB (via Mongoose)
+- **Cloud:** Cloudinary (Audio & Image hosting)
+- **Security:** JWT (API), Express-Session (Web), BcryptJS (Hashing), Zod (Validation)
+- **Audio:** Web Audio API, `music-metadata`
+
+---
+
+## 🏗️ Project Structure
+
+```text
+server/
+├── public/                 # Static assets
+│   ├── css/                # Modular CSS Architecture
+│   │   ├── components/     # Reusable UI elements (buttons, cards, modals)
+│   │   └── pages/          # Page-specific layouts
+│   ├── js/                 # Compiled Frontend JS
+│   ├── ts/                 # Source Frontend TypeScript (main.ts)
+│   └── uploads/            # Temporary staging area for processing
+├── src/                    # Backend Source
+│   ├── config/             # DB and Middleware configs
+│   ├── controllers/        # Business logic (MVC)
+│   ├── models/             # Mongoose schemas
+│   ├── routes/             # Express route definitions
+│   ├── utils/              # Metadata parser, Cloudinary helpers
+│   └── middlewares/        # Auth and Error handling
+└── views/                  # EJS Template Files
+    ├── admin/              # Admin dashboard templates
+    └── partials/           # Header, Footer, Player components
 ```
-**Default Accounts:**
-- **Admin:** `admin@audioflow.com` / `adminpassword`
-- **User:** `user@audioflow.com` / `userpassword`
 
-### 2. Start Development Server
+---
+
+## 💻 Local Setup
+
+### 1. Prerequisites
+- **Node.js** (v18 or higher)
+- **MongoDB** (Local instance or Atlas connection string)
+- **Cloudinary Account** (For media uploads)
+
+### 2. Installation
 ```bash
+git clone https://github.com/Zaid385/AudioFlow.git
+cd AudioFlow/server
+npm install
+```
+
+### 3. Environment Configuration
+Create a `.env` file in the `server` directory:
+```env
+PORT=3000
+MONGODB_URI=your_mongodb_connection_string
+SESSION_SECRET=your_random_secret
+JWT_SECRET=your_jwt_secret
+NODE_ENV=development
+
+# Cloudinary Credentials
+CLOUDINARY_CLOUD_NAME=your_name
+CLOUDINARY_API_KEY=your_key
+CLOUDINARY_API_SECRET=your_secret
+
+# Production App URL (for CORS)
+APP_URL=http://localhost:3000
+```
+
+### 4. Build and Run
+```bash
+# Build frontend and backend
+npm run build
+npm run build:frontend
+
+# Start development server
 npm run dev
 ```
-The app will be available at `http://localhost:3000`.
 
-## API Documentation
+---
 
-### Auth
-- `POST /api/v1/auth/login` - Get JWT token.
+## 🛡️ Admin Access
+To access the `/admin/manage-songs` dashboard, you must have a user account with the `role: "admin"` in your MongoDB database.
 
-### Songs
-- `GET /api/v1/songs` - Browse songs (supports `page`, `limit`, `genre`, `search`, `sort`).
-- `GET /api/v1/songs/:id` - Get specific song details.
+---
 
-### User (Protected)
-- `GET /api/v1/user/profile` - Get logged-in user info.
-- `GET /api/v1/playlists` - Get user's playlists.
-- `POST /api/v1/playlists` - Create a new playlist.
-- `POST /api/v1/playlists/:id/add-song/:songId` - Add song to playlist.
-
-## Project Structure
-- `src/models`: Mongoose schemas and interfaces.
-- `src/controllers`: Business logic for EJS and API.
-- `src/routes`: Route definitions.
-- `src/middlewares`: Auth, error handling, and file upload config.
-- `src/utils`: Validators, async wrappers, and helpers.
-- `views`: EJS templates for the web interface.
-- `public/uploads`: Storage for images and audio files.
+## 📜 License
+This project is licensed under the MIT License.

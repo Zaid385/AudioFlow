@@ -1,9 +1,9 @@
 <%- include('partials/header') %>
 
 <section>
-    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px;">
-        <h2 style="font-size: 24px; font-weight: bold;">Trending Songs</h2>
-        <a href="/songs" style="color: var(--text-muted); font-size: 14px; font-weight: bold; text-decoration: none;">Show all</a>
+    <div class="section-header">
+        <h2 class="section-title">Trending Songs</h2>
+        <a href="/songs" class="section-link">Show all</a>
     </div>
     
     <div class="song-grid">
@@ -27,8 +27,10 @@
     </div>
 </section>
 
-<section style="margin-top: 48px;">
-    <h2 style="font-size: 24px; font-weight: bold; margin-bottom: 24px;">Latest Additions</h2>
+<section class="section-spaced">
+    <div class="section-header">
+        <h2 class="section-title">Latest Additions</h2>
+    </div>
     <div class="song-grid">
         <% latestSongs.forEach(song => { %>
             <div class="song-card">
