@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node dist/server.js",
     "dev": "nodemon --exec ts-node server.ts",
-    "build": "tsc",
+    "build": "tsc && npm run build:frontend",
     "build:frontend": "tsc public/ts/main.ts --outDir public/js --esModuleInterop --target es6 --skipLibCheck"
   },
   "keywords": [],
